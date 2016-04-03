@@ -9,6 +9,7 @@
 #include <3ds.h>
 #include <citro3d.h>
 
+#include "activity/manager.h"
 #include "activity/file_browser.h"
 
 // Graphics Subsystem
@@ -64,18 +65,7 @@ int main() {
 		std::cout << entry.path() << std::endl;
 	}*/
 
-	std::shared_ptr<Handler> handler = std::make_shared<Handler>();
-	HandlerThread thread(handler);
-	std::shared_ptr<FileBrowserActivity> activity = std::make_shared<FileBrowserActivity>(handler, sdRoot);
-	activity->requestStart();
-
-	handler->postCallbackDelayed([]() {
-		printf("Hello from thread delayed!\n");
-	}, 5*1000);
-
-	handler->postCallback([]() {
-		printf("Hello from thread!\n");
-	});
+	ActivityManager::Start<FileBrowserActivity>(sdRoot);
 
 	/*using namespace UI::Elements;
 	DirectoryEntryElement entryElement(DirectoryEntryData(root.next()));

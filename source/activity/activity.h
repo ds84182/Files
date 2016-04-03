@@ -14,13 +14,15 @@ public:
 	Activity(std::shared_ptr<Handler> handler) : handler(handler) {
 		// TODO: onCreate with saved data
 	}
-	
+
 	void requestStart() {
 		handler->postCallback([=]() {this->onStart();});
 	}
-	
+
 	void requestFinish() {
-		handler->postCallback([=]() {this->onFinish();});
+		handler->postCallback([=]() {
+			this->onFinish();
+		});
 	}
 
 protected:
@@ -50,9 +52,10 @@ protected:
 			UI::Manager::Remove(layer);
 		}
 	}
-	
+
 	void finish() {
 		shown = false;
+		finishing = true;
 		for (auto &layer : layers) {
 			UI::Manager::Remove(layer);
 		}
@@ -61,4 +64,5 @@ protected:
 private:
 	std::vector<std::shared_ptr<UI::Layer>> layers;
 	bool shown = true;
+	bool finishing = false;
 };

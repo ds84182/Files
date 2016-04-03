@@ -13,15 +13,20 @@ public:
 	ThreadEntryPoint entrypoint;
 
 	T argument;
+	bool detached;
 
 	ThreadContext(
-		ThreadEntryPoint entrypoint, T argument, size_t stackSize = 0x1000, int priority = 0x30, int affinity = -1)
-		: entrypoint(entrypoint), argument(argument) {
-		thread = threadCreate(threadContextEntryPoint, this, stackSize, priority, affinity, false);
+		ThreadEntryPoint entrypoint, T argument, bool detached = false, size_t stackSize = 0x1000,
+			int priority = 0x30, int affinity = -1)
+		: entrypoint(entrypoint), argument(argument), detached(detached) {
+		thread = threadCreate(threadContextEntryPoint, this, stackSize, priority, affinity, detached);
 	}
 
 	~ThreadContext() {
-		threadFree(thread);
+		if (!detached) {
+			join();
+			threadFree(thread);
+		}
 	}
 
 	int result() {

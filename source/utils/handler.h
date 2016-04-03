@@ -134,7 +134,7 @@ public:
 
 		signal(); // Signal the queue to continue, even if there is nothing left.
 	}
-	
+
 	void stopSafe() {
 		postCallback([&]() {
 			running = false;
@@ -181,8 +181,9 @@ class HandlerThread : ThreadContext<std::shared_ptr<Handler>> {
 public:
 	std::shared_ptr<Handler> handler;
 
-	HandlerThread(std::shared_ptr<Handler> handler) : ThreadContext([](std::shared_ptr<Handler> handler) {
+	HandlerThread(std::shared_ptr<Handler> handler) : ThreadContext([=](std::shared_ptr<Handler> handler) {
 		handler->run();
+		delete this;
 		return 0;
-	}, handler), handler(handler) {}
+	}, handler, true), handler(handler) {}
 };
