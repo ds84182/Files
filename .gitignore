@@ -1,0 +1,5 @@
+.clang_complete
+*.3dsx
+*.elf
+*.smdh
+build
