@@ -147,10 +147,7 @@ private:
 	Handle eventHandle;
 	volatile bool running = false;
 
-	void init() {
-		LightLock_Init(&lck);
-		svcCreateEvent(&eventHandle, 0);
-	}
+	void init();
 
 	void lock() {
 		LightLock_Lock(&lck);
@@ -177,11 +174,14 @@ private:
 	bool handleMessageUnsafe();
 };
 
+extern thread_local std::shared_ptr<Handler> Current;
+
 class HandlerThread : ThreadContext<std::shared_ptr<Handler>> {
 public:
 	std::shared_ptr<Handler> handler;
 
 	HandlerThread(std::shared_ptr<Handler> handler) : ThreadContext([=](std::shared_ptr<Handler> handler) {
+        Current = handler;
 		handler->run();
 		delete this;
 		return 0;

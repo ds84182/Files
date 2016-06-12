@@ -2,6 +2,13 @@
 
 #include <cstdio>
 
+thread_local std::shared_ptr<Handler> Current;
+
+void Handler::init() {
+  LightLock_Init(&lck);
+  svcCreateEvent(&eventHandle, 0);
+}
+
 bool Handler::handleMessage() {
 	lock();
 	bool handled = handleMessageUnsafe();
