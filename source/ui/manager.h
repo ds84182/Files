@@ -8,8 +8,8 @@
 namespace UI {
 namespace Manager {
 
-void Add(std::shared_ptr<UI::Layer> layer);
-void Remove(std::shared_ptr<UI::Layer> layer);
+void Add(UI::Layer *layer);
+void Remove(UI::Layer *layer);
 
 // Temporary function to update the UI because UI thread isn't a thing yet
 void UpdateTemporaryFunctionToUpdateTheUIBecauseUIThreadDoesntExistYet();

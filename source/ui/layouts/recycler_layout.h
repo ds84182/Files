@@ -23,8 +23,8 @@ class RecyclerLayout : public Layout, public ScrollListener {
 	static_assert(!horizontal, "Horizontal RecyclerLayout currently not supported!");
 
 	std::deque<std::shared_ptr<Element>> queue;
-	std::shared_ptr<Layer> elementLayer = std::make_shared<Layer>();
-	std::shared_ptr<Layer> scrollLayer = std::make_shared<Layer>();
+	Layer elementLayer;
+	Layer scrollLayer;
 	std::shared_ptr<ScrollListenerElement> scrollListener;
 	std::weak_ptr<ElementBase> focused;
 	int top = 0; // the data index of the element at the top of the queue
@@ -38,12 +38,12 @@ public:
 
 	RecyclerLayout() {
 		scrollListener = std::make_shared<ScrollListenerElement>(this);
-		scrollLayer->add(scrollListener);
+		scrollLayer.add(scrollListener);
 	}
 
 	~RecyclerLayout() {
-		scrollLayer->clear();
-		elementLayer->clear();
+		scrollLayer.clear();
+		elementLayer.clear();
 	}
 
 	virtual void onScroll(int amount) override {
@@ -55,7 +55,7 @@ public:
 	}
 
 	virtual void forwardTouchStart(int x, int y) override {
-		focused = elementLayer->findAt(x, y);
+		focused = elementLayer.findAt(x, y);
 
 		auto element = focused.lock();
 		if (element && element->onTouchStart) {
@@ -94,7 +94,7 @@ public:
 
 	void clear() {
 		queue.clear();
-		elementLayer->clear();
+		elementLayer.clear();
 		data.clear();
 		top = 0;
 	}
@@ -126,15 +126,15 @@ public:
 	*/
 	virtual void update() override {
 		// Update bounds for layers and the scroll listener
-		elementLayer->bounds = bounds;
-		scrollLayer->bounds = bounds;
+		elementLayer.bounds = bounds;
+		scrollLayer.bounds = bounds;
 		scrollListener->bounds = bounds;
 
 		// Remove outside elements at the bottom
 		while (!queue.empty()) {
 			std::shared_ptr<Element> &element = queue.back();
 			if (!element->bounds.contains(bounds)) {
-				elementLayer->remove(element);
+				elementLayer.remove(element);
 				queue.pop_back();
 			} else {
 				// We expect every element above this to be inside
@@ -146,7 +146,7 @@ public:
 		while (!queue.empty()) {
 			std::shared_ptr<Element> &element = queue.front();
 			if (!element->bounds.contains(bounds)) {
-				elementLayer->remove(element);
+				elementLayer.remove(element);
 				queue.pop_front();
 				top++;
 			} else {
@@ -188,7 +188,7 @@ public:
 			// Construct the element and add it to the back
 			std::shared_ptr<Element> element = std::make_shared<Element>(data);
 			element->bounds = elementBounds;
-			elementLayer->add(element);
+			elementLayer.add(element);
 			queue.push_back(element);
 
 			// Extend fill bounds
@@ -207,7 +207,7 @@ public:
 			// Construct the element and add it to the back
 			std::shared_ptr<Element> element = std::make_shared<Element>(data);
 			element->bounds = elementBounds;
-			elementLayer->add(element);
+			elementLayer.add(element);
 			queue.push_front(element);
 
 			// Extend fill bounds
@@ -232,10 +232,10 @@ public:
 			fillBounds.move(0, diff);
 		}
 	}
-	
-	virtual void getLayers(std::function<void(std::shared_ptr<Layer>)> callback) override {
-		callback(elementLayer);
-		callback(scrollLayer);
+
+	virtual void getLayers(std::function<void(Layer*)> callback) override {
+		callback(&elementLayer);
+		callback(&scrollLayer);
 	}
 };
 

@@ -15,43 +15,20 @@ public:
 		// TODO: onCreate with saved data
 	}
 
-	void requestStart() {
-		handler->postCallback([=]() {this->onStart();});
-	}
-
-	void requestFinish() {
-		handler->postCallback([=]() {
-			this->onFinish();
-		});
-	}
+	void dispatchStart();
+	void dispatchFinish();
 
 protected:
 	std::shared_ptr<Handler> handler;
 
-	virtual void onStart() {};
-	virtual void onFinish() {
-		finish();
-	}
+	virtual void onStart();
+	virtual void onFinish();
 
-	void addLayer(std::shared_ptr<UI::Layer> layer) {
-		layers.push_back(layer);
-		if (shown) {
-			UI::Manager::Add(layer);
-		}
-	}
+	void addLayer(UI::Layer *layer);
 
-	void addLayout(UI::Layout &layout) {
-		layout.getLayers([&](std::shared_ptr<UI::Layer> layer) {
-			addLayer(layer);
-		});
-	}
+	void addLayout(UI::Layout &layout);
 
-	void removeLayer(std::shared_ptr<UI::Layer> layer) {
-		layers.erase(std::remove(layers.begin(), layers.end(), layer), layers.end());
-		if (shown) {
-			UI::Manager::Remove(layer);
-		}
-	}
+	void removeLayer(UI::Layer *layer);
 
 	void finish() {
 		shown = false;
@@ -62,7 +39,7 @@ protected:
 		handler->stopSafe();
 	}
 private:
-	std::vector<std::shared_ptr<UI::Layer>> layers;
+	std::vector<UI::Layer*> layers;
 	bool shown = true;
 	bool finishing = false;
 };

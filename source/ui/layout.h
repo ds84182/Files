@@ -14,7 +14,7 @@ public:
 
 	virtual ~Layout() = default;
 	virtual void update() = 0;
-	virtual void getLayers(std::function<void(std::shared_ptr<Layer>)> callback);
+	virtual void getLayers(std::function<void(Layer*)> callback);
 };
 
 }

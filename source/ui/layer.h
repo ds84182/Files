@@ -19,11 +19,21 @@ Layers manage a list of Elements. This is the only way to group multiple element
 
 Layers can also do render clipping. Layers have bounds too.
 Layers can also be composted.
+
+Composition Rules:
+Composition is not automatic. You must request a layer to be composted the next frame.
+The compost framebuffer is not automatically removed after modifying an element.
+Layer animations will request the layer to be composted.
+A layer can be set to be actively composted every frame. This is only useful to show layer animations
+	WHILE showing element animations.
 */
 class Layer {
 public:
 	Bounds bounds;
+	// TODO: Make this private
 	std::vector<std::shared_ptr<ElementBase>> elements; // Do not access this directly without locking
+	// TODO: Layer should have event listeners (so the RecyclerLayout can remove the scroll listener element)
+	// This would require a base class for every object that listens to element events
 
 	Layer() {
 		LightLock_Init(&lck);

@@ -9,13 +9,13 @@
 namespace UI {
 namespace Manager {
 
-static std::vector<std::shared_ptr<UI::Layer>> layers;
+static std::vector<UI::Layer*> layers;
 
-void Add(std::shared_ptr<UI::Layer> layer) {
+void Add(UI::Layer *layer) {
 	layers.push_back(layer);
 }
 
-void Remove(std::shared_ptr<UI::Layer> layer) {
+void Remove(UI::Layer *layer) {
 	layers.erase(std::remove(layers.begin(), layers.end(), layer), layers.end());
 }
 
