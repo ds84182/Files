@@ -1,5 +1,7 @@
 #include "manager.h"
 
+#include <activity/manager.h>
+
 #include <3ds.h>
 #include <cstdio>
 
@@ -30,6 +32,9 @@ void UpdateTemporaryFunctionToUpdateTheUIBecauseUIThreadDoesntExistYet() {
 	u32 kDown = hidKeysDown();
 	u32 kHeld = hidKeysHeld();
 	u32 kUp = hidKeysUp();
+
+	if (kDown != 0) ActivityManager::current->dispatchKeyPressed(kDown);
+	if (kUp != 0) ActivityManager::current->dispatchKeyReleased(kUp);
 
 	touchPosition touch;
 	hidTouchRead(&touch);

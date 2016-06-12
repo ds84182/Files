@@ -17,12 +17,16 @@ public:
 
 	void dispatchStart();
 	void dispatchFinish();
+	void dispatchKeyPressed(u32 keys);
+	void dispatchKeyReleased(u32 keys);
 
 protected:
 	std::shared_ptr<Handler> handler;
 
 	virtual void onStart();
 	virtual void onFinish();
+	virtual void onKeyPressed(u32 keys);
+	virtual void onKeyReleased(u32 keys);
 
 	void addLayer(UI::Layer *layer);
 

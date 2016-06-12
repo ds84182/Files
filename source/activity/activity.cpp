@@ -15,11 +15,26 @@ void Activity::dispatchFinish() {
 	});
 }
 
+void Activity::dispatchKeyPressed(u32 keys) {
+	handler->postCallback([=]() {
+		this->onKeyPressed(keys);
+	});
+}
+
+void Activity::dispatchKeyReleased(u32 keys) {
+	handler->postCallback([=]() {
+		this->onKeyReleased(keys);
+	});
+}
+
 void Activity::onStart() {}
 
 void Activity::onFinish() {
 	finish();
 }
+
+void Activity::onKeyPressed(u32 keys) {}
+void Activity::onKeyReleased(u32 keys) {}
 
 void Activity::addLayer(UI::Layer *layer) {
 	layers.push_back(layer);
