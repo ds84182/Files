@@ -43,6 +43,7 @@ void Deinit();
 
 void FrameBegin();
 void DrawOn(Screen screen);
+void DrawOn(GFX::FrameBuffer *fb, C3D_Mtx *projection);
 void FrameEnd();
 
 void EnableTexturing();

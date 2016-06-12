@@ -79,18 +79,24 @@ void GFX::DrawOn(GFX::Screen screen) {
 		fb = &TopRight;
 	} else if (screen == GFX::Screen::Bottom) {
 		fb = &Bottom;
+	} else {
+		return;
 	}
 
 	currentScreen = screen;
 
+	// TODO: projection for left and right
+	GFX::DrawOn(fb, screen == GFX::Screen::Bottom ? &projectionBottom : &projectionTop);
+}
+
+void GFX::DrawOn(GFX::FrameBuffer *fb, C3D_Mtx *projection) {
 	fb->drawOn();
 
 	scissorBox = Bounds(fb->height, fb->width);
 	scissorFBHeight = fb->width;
 
 	// Update the uniforms
-	// TODO: projection for left and right
-	C3D_FVUnifMtx4x4(GPU_VERTEX_SHADER, projectionUniform, screen == GFX::Screen::Bottom ? &projectionBottom : &projectionTop);
+	C3D_FVUnifMtx4x4(GPU_VERTEX_SHADER, projectionUniform, projection);
 }
 
 void GFX::FrameEnd() {
