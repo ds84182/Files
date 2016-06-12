@@ -1,12 +1,17 @@
 #include "manager.h"
 
-#include <activity/manager.h>
-
 #include <3ds.h>
-#include <cstdio>
+#include <citro3d.h>
 
+#include <cstdio>
 #include <algorithm>
 #include <vector>
+
+#include <activity/manager.h>
+
+#include <graphics/core.h>
+
+#include <utils/math_ext.h>
 
 namespace UI {
 namespace Manager {
@@ -91,6 +96,21 @@ void UpdateTemporaryFunctionToUpdateTheUIBecauseUIThreadDoesntExistYet() {
 			}
 
 			lastTouch = touch;
+		}
+	}
+}
+
+static C3D_Mtx compostMatrix;
+
+void Compost(float timeDelta) {
+	auto layerit = layers.rbegin();
+	auto layeritend = layers.rend();
+	for (;layerit != layeritend; ++layerit) {
+		auto &layer = *layerit;
+		if (layer->compost) {
+			Mtx_Ortho(&compostMatrix, 0.0, float(layer->bounds.width()), float(layer->bounds.height()), 0.0, 0.0, 1.0);
+			GFX::DrawOn(&layer->compostFB, &compostMatrix);
+			layer->render(timeDelta, true);
 		}
 	}
 }

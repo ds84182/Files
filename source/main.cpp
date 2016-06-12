@@ -185,6 +185,8 @@ int main() {
 
 		GFX::FrameBegin();
 
+			UI::Manager::Compost(timeDelta);
+
 			GFX::DrawOn(GFX::Screen::Bottom);
 
 			//GFX::SetFragMode(GFX::Replace);

@@ -37,15 +37,15 @@ struct Bounds {
 	int height() const {
 		return bottom-top;
 	}
-	
+
 	int centerX() const {
 		return (left+right)/2;
 	}
-	
+
 	int centerY() const {
 		return (top+bottom)/2;
 	}
-	
+
 	float radius() const {
 		float halfWidth = ((float)width())/2.0f;
 		float halfHeight = ((float)height())/2.0f;
@@ -78,5 +78,9 @@ struct Bounds {
 		if (right > other.right) right = other.right;
 		if (top < other.top) top = other.top;
 		if (bottom > other.bottom) bottom = other.bottom;
+	}
+
+	Bounds transform(int x, int y, float scaleX, float scaleY) {
+		return Bounds(left+x, top+y, width()*scaleX, height()*scaleY);
 	}
 };

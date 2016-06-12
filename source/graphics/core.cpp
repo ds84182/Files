@@ -33,6 +33,8 @@ void GFX::Init() {
 	gfxInitDefault();
 	C3D_Init(C3D_DEFAULT_CMDBUF_SIZE);
 
+	C3D_CullFace(GPU_CULL_NONE); // TODO: Allow cull mode to be changed
+
 	// Initialize the framebuffers
 	TopLeft.create(240, 400, GPU_RB_RGBA8, GPU_RB_DEPTH24_STENCIL8);
 	TopLeft.setClear(C3D_CLEAR_ALL, GFX::Color(255, 255, 255));

@@ -7,12 +7,21 @@
 #include <memory>
 #include <vector>
 
-#include "graphics/scissor.h"
+#include <graphics/core.h>
+#include <graphics/framebuffer.h>
+#include <graphics/rectangle.h>
+#include <graphics/scissor.h>
+#include <graphics/texture.h>
 
 #include "element.h"
-#include "utils/bounds.h"
+
+#include <utils/bounds.h>
 
 namespace UI {
+
+namespace Manager {
+	void Compost(float);
+}
 
 /*
 Layers manage a list of Elements. This is the only way to group multiple elements together.
@@ -30,10 +39,8 @@ A layer can be set to be actively composted every frame. This is only useful to 
 class Layer {
 public:
 	Bounds bounds;
-	// TODO: Make this private
-	std::vector<std::shared_ptr<ElementBase>> elements; // Do not access this directly without locking
-	// TODO: Layer should have event listeners (so the RecyclerLayout can remove the scroll listener element)
-	// This would require a base class for every object that listens to element events
+
+	float x = 0, y = 0, scaleX = 1, scaleY = 1;
 
 	Layer() {
 		LightLock_Init(&lck);
@@ -69,15 +76,54 @@ public:
 		unlock();
 	}
 
-	void render(float timeDelta) {
-		lock();
-		GFX::Scissor scissor(bounds); // This scissors (or subscissors) an area
-		// Scissors can be applied recursively
-		std::for_each(elements.rbegin(), elements.rend(), [&](auto &element) {
-			element->render(timeDelta);
-		});
+	void render(float timeDelta, bool duringCompost = false) {
+		if (!duringCompost) {
+			auto mtx = GFX::PushMatrix();
 
-		unlock();
+			Mtx_Translate(mtx, x, y, 0);
+			Mtx_Scale(mtx, scaleX, scaleY, 1);
+
+			GFX::UpdateMatrix();
+		}
+
+		if (compost && !duringCompost) {
+			// Layer scale transforms only work when composted
+			Bounds transformedBounds = bounds; //bounds.transform(x, y, scaleX, scaleY);
+			GFX::Rectangle rect(transformedBounds.left, transformedBounds.top,
+				transformedBounds.width(), transformedBounds.height(), compostColor);
+			rect.render(compostFB.getColorTexture());
+		} else {
+			lock();
+			// TODO: Transform bounds and layer (if not duringCompost)
+			GFX::Scissor scissor(bounds);
+			// This scissors (or subscissors) an area
+			// Scissors can be applied recursively
+
+			if (hasBackground) {
+				GFX::Rectangle rect(bounds.left, bounds.top, bounds.width(), bounds.height(), backgroundColor);
+				rect.render(backgroundTexture);
+			}
+
+			std::for_each(elements.rbegin(), elements.rend(), [&](auto &element) {
+				element->render(timeDelta);
+			});
+
+			unlock();
+		}
+
+		if (!duringCompost) {
+			GFX::PopMatrix();
+		}
+	}
+
+	void startCompost(bool alwaysDirty = false) {
+		compost = true;
+		compostDirty = true;
+		compostAlwaysDirty = alwaysDirty;
+
+		compostFB.destroy();
+		compostFB.create(bounds.width(), bounds.height(), GPU_RB_RGBA8, GPU_RB_DEPTH24_STENCIL8);
+		compostFB.setClear(C3D_CLEAR_ALL, GFX::Color(0,0,0, 0));
 	}
 
 	std::shared_ptr<ElementBase> find(std::function<bool(std::shared_ptr<ElementBase>&)> func) {
@@ -99,6 +145,22 @@ public:
 	}
 private:
 	LightLock lck;
+
+	// TODO: Make this private
+	std::vector<std::shared_ptr<ElementBase>> elements; // Do not access this directly without locking
+	// TODO: Layer should have event listeners (so the RecyclerLayout can remove the scroll listener element)
+	// This would require a base class for every object that listens to element events
+	bool hasBackground = false;
+	GFX::Color backgroundColor;
+	GFX::Texture *backgroundTexture = nullptr;
+
+	bool compost = false; // Render to framebuffer and use the framebuffer for rendering
+	bool compostDirty = true;
+	bool compostAlwaysDirty = false; // Always render to framebuffer every frame
+	GFX::Color compostColor = GFX::Color(255, 255, 255);
+	GFX::FrameBuffer compostFB;
+
+	friend void UI::Manager::Compost(float);
 };
 
 }
