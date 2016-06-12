@@ -15,4 +15,8 @@ inline TimeInterpolator LogDecelerationInterpolatorFactory(float base, float tim
 	};
 }
 
+float FastOutSlowInInterpolator(float);
+float FastOutLinearInInterpolator(float);
+float LinearOutSlowInInterpolator(float);
+
 }
