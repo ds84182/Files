@@ -4,6 +4,7 @@
 #include <citro3d.h>
 
 #include "core.h"
+#include "texture.h"
 
 namespace GFX {
 
@@ -14,7 +15,7 @@ public:
 
 	Rectangle(float x, float y, float width, float height, GFX::Color color);
 
-	void render();
+	void render(Texture *texture = nullptr);
 };
 
 }

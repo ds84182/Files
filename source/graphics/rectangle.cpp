@@ -25,10 +25,11 @@ Rectangle::Rectangle(float x, float y, float width, float height, GFX::Color col
 
 		BufInfo_Init(&vertexbuffer);
 		BufInfo_Add(&vertexbuffer, vbodata, sizeof(float)*3, 1, 0x0);
+		BufInfo_Add(&vertexbuffer, vbodata, sizeof(float)*3, 1, 0x2);
 	}
 }
 
-void Rectangle::render() {
+void Rectangle::render(Texture *texture) {
 	C3D_Mtx* mtx = GFX::PushMatrix();
 
 	Mtx_Translate(mtx, x, y, 0);
@@ -36,8 +37,13 @@ void Rectangle::render() {
 
 	GFX::UpdateMatrix();
 
-	GFX::Attr::PositionFixedColor.use();
-	GFX::SetFragMode(GFX::FragMode::Replace);
+	if (texture) {
+		GFX::Attr::PositionFixedColorTexture.use();
+		texture->bind(0);
+	} else
+		GFX::Attr::PositionFixedColor.use();
+
+	GFX::SetFragMode(texture ? GFX::FragMode::ModulateTexture : GFX::FragMode::Replace);
 	C3D_SetBufInfo(&vertexbuffer);
 	C3D_FixedAttribSet(1, color.r/255.0, color.g/255.0, color.b/255.0, color.a/255.0);
 	C3D_DrawArrays(GPU_TRIANGLE_STRIP, 0, 4);
