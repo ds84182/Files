@@ -4,6 +4,7 @@
 #include <citro3d.h>
 
 #include "core.h"
+#include "texture.h"
 
 namespace GFX {
 
@@ -46,6 +47,10 @@ public:
 
 	void drawOn() {
 		C3D_FrameDrawOn(renderTarget);
+	}
+
+	Texture *getColorTexture() {
+		return Texture::from(&renderTarget->renderBuf.colorBuf);
 	}
 };
 
