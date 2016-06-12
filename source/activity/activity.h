@@ -42,8 +42,9 @@ protected:
 		}
 		handler->stopSafe();
 	}
+protected:
+	std::vector<UI::Layer*> layers; // Do not modify directly
 private:
-	std::vector<UI::Layer*> layers;
 	bool shown = true;
 	bool finishing = false;
 };
