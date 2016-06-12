@@ -1,4 +1,5 @@
 #include "file_browser.h"
+#include "manager.h"
 
 using UI::Elements::DirectoryEntryData;
 
@@ -44,4 +45,11 @@ void FileBrowserActivity::loadEntries() {
 	});
 
 	directoryList.update(); // Update needs to be called so that the elements are put on screen.
+}
+
+void FileBrowserActivity::onKeyReleased(u32 keys) {
+	if (keys & KEY_B) {
+		path = path.parent();
+		loadEntries();
+	}
 }
