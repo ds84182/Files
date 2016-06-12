@@ -21,6 +21,10 @@ public:
 		splitAppend(str);
 	}
 
+	Path(const Path *other, const std::string &str) : parts(other->parts), device(other->device) {
+		splitAppend(str);
+	}
+
 	void append(std::string str) { // We create a copy so we can directly move it to the destination
 		if (str.empty() || str == ".") return;
 		if (str == "..") {
@@ -40,6 +44,11 @@ public:
 	void splitAppend(const std::string &str) {
 		std::string::size_type start = 0;
 		std::string::size_type end = str.find('/', start);
+
+		if (end == std::string::npos) {
+			append(str);
+			return;
+		}
 
 		while (true) {
 			if (end-start > 0) {
@@ -77,6 +86,10 @@ public:
 		} else {
 			return "";
 		}
+	}
+
+	Path parent() const {
+		return Path(this, "..");
 	}
 
 	/*friend std::ostream &operator<<(std::ostream &stream, const Path &path) {
