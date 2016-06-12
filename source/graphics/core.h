@@ -29,6 +29,18 @@ union Color {
 	Color() : r(0), g(0), b(0), a(255) {};
 	Color(u8 r, u8 g, u8 b, u8 a = 255) : r(r), g(g), b(b), a(a) {};
 	Color(u32 raw) : raw(raw) {};
+
+	Color operator+(const Color &other) const {
+		return Color(r+other.r, g+other.g, b+other.b, a+other.a);
+	}
+
+	Color operator-(const Color &other) const {
+		return Color(r-other.r, g-other.g, b-other.b, a-other.a);
+	}
+
+	Color operator*(const float &other) const {
+		return Color(r*other, g*other, b*other, a*other);
+	}
 };
 
 static_assert(sizeof(Color) == 4, "Size of color union is not 4 bytes!");
