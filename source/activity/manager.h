@@ -9,30 +9,32 @@
 namespace ActivityManager {
 
 // TODO: This probably needs a lock!
-extern std::unique_ptr<Activity> current;
-extern std::deque<std::unique_ptr<Activity>> stack;
+extern Activity *current;
+extern std::deque<Activity*> stack;
 
 // TODO: Enter and Finish need to send a callback to be called in the activity (depends on lock)
-inline void Enter(std::unique_ptr<Activity> activity) {
-	stack.emplace_back(std::move(current));
-	current = std::move(activity);
-	current->requestStart();
+// This is needed because the Activity may only take requests as a suggestion
+// For instance, requestFinish could prompt the Activity to play an animation before exiting fully
+inline void Enter(Activity *activity) {
+	stack.emplace_back(current);
+	current = activity;
+	current->dispatchStart();
 }
 
 template <class T, class... Args>
 void Start(Args&&... args) {
 	std::shared_ptr<Handler> handler = std::make_shared<Handler>();
 	new HandlerThread(handler); // HandlerThread cleans itself up
-	auto activity = std::unique_ptr<Activity>(new T(handler, std::forward<Args>(args)...));
-	Enter(std::move(activity));
+	Activity *activity = new T(handler, std::forward<Args>(args)...);
+	Enter(activity);
 }
 
 inline void Finish() {
-	current->requestFinish();
+	current->dispatchFinish();
 	if (stack.empty()) {
-		current.reset();
+		current = nullptr; // TODO: Exit
 	} else {
-		current = std::move(stack.back());
+		current = stack.back();
 		stack.pop_back();
 	}
 }
