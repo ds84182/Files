@@ -9,6 +9,7 @@
 #include <3ds.h>
 #include <citro3d.h>
 
+// Activity Subsystem
 #include "activity/manager.h"
 #include "activity/file_browser.h"
 
@@ -26,8 +27,6 @@
 //#include "utils/bounds.h"
 #include "utils/filesystem/path.h"
 //#include "utils/filesystem/directory.h"
-#include "utils/handler.h"
-#include "utils/thread.h"
 
 #define TICKS_PER_SEC (268123480)
 
