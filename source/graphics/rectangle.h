@@ -15,7 +15,8 @@ public:
 
 	Rectangle(float x, float y, float width, float height, GFX::Color color);
 
-	void render(Texture *texture = nullptr);
+	void render(Texture *texture = nullptr, int textureWidth = 0, int textureHeight = 0,
+		int textureX = 0, int textureY = 0);
 };
 
 }

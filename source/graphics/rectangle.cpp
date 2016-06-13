@@ -28,7 +28,8 @@ Rectangle::Rectangle(float x, float y, float width, float height, GFX::Color col
 	}
 }
 
-void Rectangle::render(Texture *texture) {
+void Rectangle::render(Texture *texture, int textureWidth, int textureHeight,
+	int textureX, int textureY) {
 	C3D_Mtx* mtx = GFX::PushMatrix();
 
 	Mtx_Translate(mtx, x, y, 0);
@@ -37,7 +38,24 @@ void Rectangle::render(Texture *texture) {
 	GFX::UpdateMatrix();
 
 	GFX::Attr::PositionFixedColorTexture.use();
-	if (texture) texture->bind(0);
+	if (texture) {
+		texture->bind(0);
+
+		if (textureWidth == 0) {
+			textureWidth = texture->width;
+		}
+
+		if (textureHeight == 0) {
+			textureWidth = texture->height;
+		}
+
+		C3D_FVUnifSet(GPU_VERTEX_SHADER, textureScaleUniform,
+			float(textureWidth)/float(texture->p2Width),
+			float(textureHeight)/float(texture->p2Height), 1, 1);
+		C3D_FVUnifSet(GPU_VERTEX_SHADER, textureOffsetUniform,
+			float(textureX)/float(texture->p2Width),
+			float(textureY)/float(texture->p2Height), 0, 0);
+	}
 
 	GFX::SetFragMode(texture ? GFX::FragMode::ModulateTexture : GFX::FragMode::Replace);
 	C3D_SetBufInfo(&vertexbuffer);

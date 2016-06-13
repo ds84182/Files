@@ -107,6 +107,9 @@ void Glyph::render(int x, int y) const {
 
 	GFX::UpdateMatrix();
 
+	C3D_FVUnifSet(GPU_VERTEX_SHADER, textureScaleUniform, 1, 1, 1, 1);
+	C3D_FVUnifSet(GPU_VERTEX_SHADER, textureOffsetUniform, 0, 0, 0, 0);
+
 	// C3D_TexBind does not modify C3D_Tex, but it's not const in the method signature
 	C3D_TexBind(0, const_cast<C3D_Tex*>(&texture));
     GFX::Attr::PositionFixedColorTexture.use();

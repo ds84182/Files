@@ -1,7 +1,8 @@
 ; Uniforms
 .fvec projection[4]
 .fvec modelView[4]
-.bool texture
+.fvec textureOffset
+.fvec textureScale
 
 ; Constants
 .constf myconst(0.0, 1.0, -1.0, 0.1)
@@ -38,8 +39,10 @@
 	; outclr = inclr
 	mov outclr, inclr
 
-	; outtex = intex
-	mov outtex, intex
+	; outtex = (intex*textureScale)+textureOffset
+	; technically outtex = textureOffset+(textureScale*intex)
+	mul r0, textureScale, intex
+	add outtex, textureOffset, r0
 
 	; We're finished
 	end

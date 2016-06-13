@@ -15,6 +15,8 @@
 static DVLB_s* vshader_dvlb;
 static shaderProgram_s program;
 static int projectionUniform;
+int GFX::textureScaleUniform;
+int GFX::textureOffsetUniform;
 
 static C3D_Mtx projectionTop;
 static C3D_Mtx projectionBottom;
@@ -58,6 +60,8 @@ void GFX::Init() {
 	projectionUniform = shaderInstanceGetUniformLocation(program.vertexShader, "projection");
 	MtxStack_Init(&stack);
 	MtxStack_Bind(&stack, GPU_VERTEX_SHADER, shaderInstanceGetUniformLocation(program.vertexShader, "modelView"), 4);
+	textureScaleUniform = shaderInstanceGetUniformLocation(program.vertexShader, "textureScale");
+	textureOffsetUniform = shaderInstanceGetUniformLocation(program.vertexShader, "textureOffset");
 
 	// Compute the projection matricies
 	Mtx_OrthoTilt(&projectionTop, 0.0, 400.0, 240.0, 0.0, 0.0, 1.0);

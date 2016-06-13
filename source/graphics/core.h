@@ -50,6 +50,9 @@ extern FrameBuffer TopLeft;
 extern FrameBuffer TopRight;
 extern FrameBuffer Bottom;
 
+extern int textureScaleUniform;
+extern int textureOffsetUniform;
+
 void Init();
 void Deinit();
 
