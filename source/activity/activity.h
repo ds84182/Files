@@ -14,6 +14,7 @@ public:
 	Activity(std::shared_ptr<Handler> handler) : handler(handler) {
 		// TODO: onCreate with saved data
 	}
+	virtual ~Activity() {};
 
 	void dispatchStart();
 	void dispatchFinish();
@@ -37,14 +38,7 @@ protected:
 
 	void removeLayer(UI::Layer *layer);
 
-	void finish() {
-		shown = false;
-		finishing = true;
-		for (auto &layer : layers) {
-			UI::Manager::Remove(layer);
-		}
-		handler->stopSafe();
-	}
+	void finish();
 protected:
 	std::vector<UI::Layer*> layers; // Do not modify directly
 private:

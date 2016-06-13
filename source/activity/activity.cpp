@@ -64,6 +64,17 @@ void Activity::removeLayer(UI::Layer *layer) {
 	}
 }
 
+void Activity::finish() {
+	shown = false;
+	finishing = true;
+	for (auto &layer : layers) {
+		UI::Manager::Remove(layer);
+	}
+	ActivityManager::FinishNow();
+	handler->stopSafe();
+	delete this;
+}
+
 namespace ActivityManager {
 
 Activity *current;

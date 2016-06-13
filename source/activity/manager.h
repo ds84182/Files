@@ -31,6 +31,9 @@ void Start(Args&&... args) {
 
 inline void Finish() {
 	current->dispatchFinish();
+}
+
+inline void FinishNow() {
 	if (stack.empty()) {
 		current = nullptr; // TODO: Exit
 	} else {
