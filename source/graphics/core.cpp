@@ -71,6 +71,9 @@ void GFX::Init() {
 
 	// Configure depth test to overwrite pixels with the same depth (needed to draw overlapping objects)
 	C3D_DepthTest(true, GPU_GEQUAL, GPU_WRITE_ALL);
+
+	// Confligure Alpha Blending to keep the dest buffer at 255 (Like a normal blend I guess)
+	C3D_AlphaBlend(GPU_BLEND_ADD, GPU_BLEND_ADD, GPU_SRC_ALPHA, GPU_ONE_MINUS_SRC_ALPHA, GPU_ONE, GPU_ONE_MINUS_SRC_ALPHA);
 }
 
 void GFX::FrameBegin() {
