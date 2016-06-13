@@ -15,6 +15,12 @@ void Activity::dispatchFinish() {
 	});
 }
 
+void Activity::dispatchUpdate(float delta) {
+	//handler->postCallback([=]() {
+		this->onUpdate(delta);
+	//});
+}
+
 void Activity::dispatchKeyPressed(u32 keys) {
 	handler->postCallback([=]() {
 		this->onKeyPressed(keys);
@@ -32,6 +38,8 @@ void Activity::onStart() {}
 void Activity::onFinish() {
 	finish();
 }
+
+void Activity::onUpdate(float delta) {}
 
 void Activity::onKeyPressed(u32 keys) {}
 void Activity::onKeyReleased(u32 keys) {}

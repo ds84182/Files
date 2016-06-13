@@ -31,7 +31,9 @@ static touchPosition startTouch;
 static touchPosition lastTouch;
 static bool tapValid;
 
-void UpdateTemporaryFunctionToUpdateTheUIBecauseUIThreadDoesntExistYet() {
+void UpdateTemporaryFunctionToUpdateTheUIBecauseUIThreadDoesntExistYet(float delta) {
+	ActivityManager::current->dispatchUpdate(delta);
+
 	auto focused = weakFocused.lock();
 
 	u32 kDown = hidKeysDown();

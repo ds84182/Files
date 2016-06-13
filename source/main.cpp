@@ -148,7 +148,7 @@ int main() {
 		if (kDown & KEY_START)
 			break; // break in order to return to hbmenu
 
-		UI::Manager::UpdateTemporaryFunctionToUpdateTheUIBecauseUIThreadDoesntExistYet();
+		UI::Manager::UpdateTemporaryFunctionToUpdateTheUIBecauseUIThreadDoesntExistYet(timeDelta);
 
 		/*if (kHeld & KEY_DOWN) {
 			scrollVelocity+=2;

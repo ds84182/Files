@@ -17,6 +17,7 @@ public:
 
 	void dispatchStart();
 	void dispatchFinish();
+	void dispatchUpdate(float delta);
 	void dispatchKeyPressed(u32 keys);
 	void dispatchKeyReleased(u32 keys);
 
@@ -25,6 +26,8 @@ protected:
 
 	virtual void onStart();
 	virtual void onFinish();
+	// THIS DOES NOT GET CALLED ON THE HANDLER THREAD! BEWARE!
+	virtual void onUpdate(float delta);
 	virtual void onKeyPressed(u32 keys);
 	virtual void onKeyReleased(u32 keys);
 
