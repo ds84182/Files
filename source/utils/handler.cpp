@@ -22,9 +22,9 @@ bool Handler::handleMessageUnsafe() {
 	bool handled = false;
 
 	if (message) {
-		printf("Message %p (time %llu current %llu next %p)\n", *message, message->when, osGetTime(), *message->next);
+		//printf("Message %p (time %llu current %llu next %p)\n", *message, message->when, osGetTime(), *message->next);
 	} else {
-		printf("No message\n");
+		//printf("No message\n");
 	}
 
 	if (message && message->when <= osGetTime()) {
