@@ -42,6 +42,11 @@ public:
 
 	float x = 0, y = 0, scaleX = 1, scaleY = 1;
 
+	bool hasBackground = false;
+	GFX::Color backgroundColor;
+	GFX::Texture *backgroundTexture = nullptr;
+	GFX::Color compostColor = GFX::Color(255, 255, 255);
+
 	Layer() {
 		LightLock_Init(&lck);
 	}
@@ -151,14 +156,10 @@ private:
 	std::vector<std::shared_ptr<ElementBase>> elements; // Do not access this directly without locking
 	// TODO: Layer should have event listeners (so the RecyclerLayout can remove the scroll listener element)
 	// This would require a base class for every object that listens to element events
-	bool hasBackground = false;
-	GFX::Color backgroundColor;
-	GFX::Texture *backgroundTexture = nullptr;
 
 	bool compost = false; // Render to framebuffer and use the framebuffer for rendering
 	bool compostDirty = true;
 	bool compostAlwaysDirty = false; // Always render to framebuffer every frame
-	GFX::Color compostColor = GFX::Color(255, 255, 255);
 	GFX::FrameBuffer compostFB;
 
 	friend void UI::Manager::Compost(float);

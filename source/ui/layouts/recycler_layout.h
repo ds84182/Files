@@ -23,8 +23,6 @@ class RecyclerLayout : public Layout, public ScrollListener {
 	static_assert(!horizontal, "Horizontal RecyclerLayout currently not supported!");
 
 	std::deque<std::shared_ptr<Element>> queue;
-	Layer elementLayer;
-	Layer scrollLayer;
 	std::shared_ptr<ScrollListenerElement> scrollListener;
 	std::weak_ptr<ElementBase> focused;
 	int top = 0; // the data index of the element at the top of the queue
@@ -35,6 +33,8 @@ public:
 	//std::function<int(const Data&, int)> getElementSize;
 	int elementSize; // < This is used if getElementSize is null
 	std::function<void(Data&, int)> onSelected;
+	Layer elementLayer;
+	Layer scrollLayer;
 
 	RecyclerLayout() {
 		scrollListener = std::make_shared<ScrollListenerElement>(this);
