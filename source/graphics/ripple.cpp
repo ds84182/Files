@@ -20,9 +20,12 @@ void GFX::Ripple::startEntry() {
 	cancel();
 
 	const float radiusEnterDuration = sqrt(radiusEnd / waveTouchDownAcceleration * density) + 0.5f;
-	controller.start(LinearInterpolator, ValueTarget(&radiusWeight, 0.0f, 1.0f), radiusEnterDuration, -rippleEnterDelay, "radius");
-	controller.start(LinearInterpolator, ValueTarget(&xWeight, 0.0f, 1.0f), radiusEnterDuration, -rippleEnterDelay);
-	controller.start(LinearInterpolator, ValueTarget(&yWeight, 0.0f, 1.0f), radiusEnterDuration, -rippleEnterDelay);
+	controller.start(LinearInterpolator, ValueTarget(&radiusWeight, 0.0f, 1.0f), radiusEnterDuration,
+		nullptr, "radius", -rippleEnterDelay);
+	controller.start(LinearInterpolator, ValueTarget(&xWeight, 0.0f, 1.0f), radiusEnterDuration,
+		nullptr, "x", -rippleEnterDelay);
+	controller.start(LinearInterpolator, ValueTarget(&yWeight, 0.0f, 1.0f), radiusEnterDuration,
+		nullptr, "y", -rippleEnterDelay);
 	opacity = 0.26f;
 }
 

@@ -22,10 +22,14 @@ public:
 
 	void startEntry();
 	void startExit();
-	void cancel() { controller.clear(); }
-	bool running() {return controller.hasTag("radius") && controller.getTag("radius")->state == Animation::State::Running;}
+	void cancel() {
+		controller.clear();
+	}
+	bool running() {
+		return controller.hasTag("radius") && controller.getTag("radius").state == Animation::State::Running;
+	}
 	void render(float deltaTime);
-	
+
 	void onTouchStart(int x, int y) {
 		setHotspot(x, y);
 		startEntry();
@@ -35,18 +39,18 @@ public:
 		setHotspot(x, y);
 		startExit();
 	}
-	
+
 	void setHotspot(int x, int y) {
 		hotspotX = x;
 		hotspotY = y;
 	}
-	
+
 	void setBounds(Bounds bounds) {
 		centerX = bounds.centerX();
 		centerY = bounds.centerY();
 		radiusEnd = bounds.radius();
 	}
-	
+
 	void setCenter(Bounds bounds) {
 		centerX = bounds.centerX();
 		centerY = bounds.centerY();
