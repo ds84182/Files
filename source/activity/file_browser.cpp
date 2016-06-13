@@ -21,7 +21,27 @@ void FileBrowserActivity::init() {
 		}
 	};
 
+	directoryList.update();
+	// This updates because the layout bounds need to be set before compost starts
+
 	addLayout(directoryList);
+
+	directoryList.elementLayer.startCompost(true);
+
+	transitionController.start(
+		&Animation::LinearOutSlowInInterpolator,
+		Animation::ValueTarget<GFX::Color>(
+			&directoryList.elementLayer.compostColor,
+			GFX::Color(255, 255, 255, 0),
+			GFX::Color(255, 255, 255, 255)),
+		0.270f);
+	transitionController.start(
+		&Animation::LinearOutSlowInInterpolator,
+		Animation::ValueTarget<float>(
+			&directoryList.elementLayer.y,
+			240*0.16,
+			0),
+		0.270f);
 }
 
 void FileBrowserActivity::onStart() {
@@ -45,6 +65,10 @@ void FileBrowserActivity::loadEntries() {
 	});
 
 	directoryList.update(); // Update needs to be called so that the elements are put on screen.
+}
+
+void FileBrowserActivity::onUpdate(float delta) {
+	transitionController.update(delta);
 }
 
 void FileBrowserActivity::onKeyReleased(u32 keys) {

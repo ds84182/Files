@@ -2,8 +2,10 @@
 
 #include "activity.h"
 
-#include "ui/layouts/recycler_layout.h"
-#include "ui/elements/directory_entry.h"
+#include <animation/controller.h>
+
+#include <ui/layouts/recycler_layout.h>
+#include <ui/elements/directory_entry.h>
 
 class FileBrowserActivity : public Activity {
 public:
@@ -15,11 +17,13 @@ public:
 	// Called when the Activity is requested to start
 	// TODO: Load directory stuff on worker thread, push to this activity's thread
 	virtual void onStart() override;
+	virtual void onUpdate(float delta) override;
 	virtual void onKeyReleased(u32 keys) override;
 
 private:
 	FS::Path path;
 	UI::Layouts::RecyclerLayout<UI::Elements::DirectoryEntryElement> directoryList;
+	Animation::Controller transitionController;
 
 	void init();
 	void loadEntries();
