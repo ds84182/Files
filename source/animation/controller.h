@@ -41,10 +41,13 @@ public:
 			OnDone onDone = nullptr, std::string tag = "", float time = 0.0, State state = State::Running,
 			bool reverse = false) {
 		animations.emplace_back(interpolator, target, duration, onDone, time, state, reverse);
+		AnimationState &anim = animations.back();
 		if (!tag.empty()) {
-			tagMap.emplace(tag, animations.back());
+			tagMap.emplace(tag, anim);
 		}
-		return animations.back();
+		if (state == State::Running)
+			anim.target(anim.interpolator(anim.time/anim.duration));
+		return anim;
 	}
 
 	void clear() {
