@@ -61,7 +61,9 @@ void FileBrowserActivity::loadEntries() {
 
 	// Sort the entries
 	std::sort(directoryList.data.begin(), directoryList.data.end(), [](auto &a, auto &b) {
-		return a.path.name() < b.path.name();
+		if (a.type == FS::EntryType::Directory && b.type != a.type) return true;
+		if (b.type == FS::EntryType::Directory && a.type != b.type) return false;
+		return strcasecmp(a.path.name().c_str(), b.path.name().c_str()) < 0;
 	});
 
 	directoryList.update(); // Update needs to be called so that the elements are put on screen.
