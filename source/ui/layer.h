@@ -88,10 +88,11 @@ public:
 
 		if (compost && !duringCompost) {
 			// Layer scale transforms only work when composted
-			Bounds transformedBounds = bounds; //bounds.transform(x, y, scaleX, scaleY);
-			GFX::Rectangle rect(transformedBounds.left, transformedBounds.top,
-				transformedBounds.width(), transformedBounds.height(), compostColor);
-			rect.render(compostFB.getColorTexture());
+			GFX::Scissor scissor(bounds);
+			GFX::Texture tex = compostFB.getColorTexture();
+			GFX::Rectangle rect(bounds.left, bounds.top,
+				bounds.width(), bounds.height(), compostColor);
+			rect.render(&tex, bounds.width(), bounds.height());
 		} else {
 			lock();
 			// TODO: Transform bounds and layer (if not duringCompost)
@@ -122,8 +123,8 @@ public:
 		compostAlwaysDirty = alwaysDirty;
 
 		compostFB.destroy();
-		compostFB.create(bounds.width(), bounds.height(), GPU_RB_RGBA8, GPU_RB_DEPTH24_STENCIL8);
-		compostFB.setClear(C3D_CLEAR_ALL, GFX::Color(0,0,0, 0));
+		compostFB.create(GFX::np2(bounds.width()), GFX::np2(bounds.height()), GPU_RB_RGBA8, GPU_RB_DEPTH24_STENCIL8);
+		compostFB.setClear(C3D_CLEAR_ALL, GFX::Color(0, 0, 0, 0));
 	}
 
 	std::shared_ptr<ElementBase> find(std::function<bool(std::shared_ptr<ElementBase>&)> func) {

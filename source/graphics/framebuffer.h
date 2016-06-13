@@ -49,7 +49,7 @@ public:
 		C3D_FrameDrawOn(renderTarget);
 	}
 
-	Texture *getColorTexture() {
+	Texture getColorTexture() {
 		return Texture::from(&renderTarget->renderBuf.colorBuf);
 	}
 };
