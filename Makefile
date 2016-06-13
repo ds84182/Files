@@ -7,6 +7,11 @@ $(error "Please set DEVKITARM in your environment. export DEVKITARM=<path to>dev
 endif
 
 TOPDIR ?= $(CURDIR)
+
+ifeq ($(wildcard $(TOPDIR)/citro3d/.),)
+$(error "Please run `git submodule init`")
+endif
+
 include $(DEVKITARM)/3ds_rules
 
 #---------------------------------------------------------------------------------
@@ -29,9 +34,9 @@ include $(DEVKITARM)/3ds_rules
 #---------------------------------------------------------------------------------
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
-SOURCES		:=	source source/activity source/animation source/graphics source/ui source/ui/elements source/ui/layouts source/utils
+SOURCES		:=	citro3d/source citro3d/source/maths source source/activity source/animation source/graphics source/ui source/ui/elements source/ui/layouts source/utils
 DATA		:=	data
-INCLUDES	:=	include source
+INCLUDES	:=	citro3d/include include source
 #ROMFS		:=	romfs
 
 #---------------------------------------------------------------------------------
@@ -50,7 +55,7 @@ CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions -std=c++14
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=3dsx.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map) -Wl,--gc-sections
 
-LIBS	:= -lfreetype -lpng -lz -lcitro3d -lctru -lm
+LIBS	:= -lfreetype -lpng -lz -lctru -lm
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
