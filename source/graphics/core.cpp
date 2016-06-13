@@ -79,12 +79,17 @@ void GFX::FrameBegin() {
 
 void GFX::DrawOn(GFX::Screen screen) {
 	GFX::FrameBuffer *fb;
+	C3D_Mtx *projection;
+
 	if (screen == GFX::Screen::TopLeft) {
 		fb = &TopLeft;
+		projection = &projectionTop;
 	} else if (screen == GFX::Screen::TopRight) {
 		fb = &TopRight;
+		projection = &projectionTop;
 	} else if (screen == GFX::Screen::Bottom) {
 		fb = &Bottom;
+		projection = &projectionBottom;
 	} else {
 		return;
 	}
@@ -92,17 +97,26 @@ void GFX::DrawOn(GFX::Screen screen) {
 	currentScreen = screen;
 
 	// TODO: projection for left and right
-	GFX::DrawOn(fb, screen == GFX::Screen::Bottom ? &projectionBottom : &projectionTop);
+	GFX::DrawOn(fb, projection);
 }
 
-void GFX::DrawOn(GFX::FrameBuffer *fb, C3D_Mtx *projection) {
+void GFX::DrawOn(GFX::FrameBuffer *fb, C3D_Mtx *projection, bool notFlipped) {
 	fb->drawOn();
 
-	scissorBox = Bounds(fb->height, fb->width);
-	scissorFBHeight = fb->width;
+	if (notFlipped) {
+		scissorBox = Bounds(fb->width, fb->height);
+		scissorFBHeight = fb->height;
+	} else {
+		scissorBox = Bounds(fb->height, fb->width);
+		scissorFBHeight = fb->width;
+	}
+
+	scissorFlipped = !notFlipped;
 
 	// Update the uniforms
 	C3D_FVUnifMtx4x4(GPU_VERTEX_SHADER, projectionUniform, projection);
+	C3D_FVUnifSet(GPU_VERTEX_SHADER, textureScaleUniform, 1, 1, 1, 1);
+	C3D_FVUnifSet(GPU_VERTEX_SHADER, textureOffsetUniform, 0, 0, 0, 0);
 }
 
 void GFX::FrameEnd() {

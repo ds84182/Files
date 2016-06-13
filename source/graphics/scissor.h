@@ -8,6 +8,7 @@ namespace GFX {
 
 extern Bounds scissorBox;
 extern u32 scissorFBHeight;
+extern bool scissorFlipped;
 
 class Scissor {
 public:
@@ -30,7 +31,7 @@ public:
 private:
 	Bounds previous;
 	Bounds current;
-	
+
 	static void updateScissor();
 };
 
