@@ -108,8 +108,8 @@ void Compost(float timeDelta) {
 	for (;layerit != layeritend; ++layerit) {
 		auto &layer = *layerit;
 		if (layer->compost) {
-			Mtx_Ortho(&compostMatrix, 0.0, float(layer->bounds.width()), float(layer->bounds.height()), 0.0, 0.0, 1.0);
-			GFX::DrawOn(&layer->compostFB, &compostMatrix);
+			Mtx_Ortho(&compostMatrix, 0.0, float(layer->compostFB.width), float(layer->compostFB.height), 0.0, 0.0, 1.0);
+			GFX::DrawOn(&layer->compostFB, &compostMatrix, true);
 			layer->render(timeDelta, true);
 		}
 	}
