@@ -105,8 +105,8 @@ void UpdateTemporaryFunctionToUpdateTheUIBecauseUIThreadDoesntExistYet(float del
 static C3D_Mtx compostMatrix;
 
 void Compost(float timeDelta) {
-	auto layerit = layers.rbegin();
-	auto layeritend = layers.rend();
+	auto layerit = layers.begin();
+	auto layeritend = layers.end();
 	for (;layerit != layeritend; ++layerit) {
 		auto &layer = *layerit;
 		if (layer->compost) {
@@ -118,8 +118,8 @@ void Compost(float timeDelta) {
 }
 
 void Render(float timeDelta) {
-	auto layerit = layers.rbegin();
-	auto layeritend = layers.rend();
+	auto layerit = layers.begin();
+	auto layeritend = layers.end();
 	for (;layerit != layeritend; ++layerit) {
 		auto &layer = *layerit;
 		layer->render(timeDelta);
