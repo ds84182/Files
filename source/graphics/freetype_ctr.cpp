@@ -129,8 +129,11 @@ Font::Font(const u8 *data, size_t size, int faceIndex) {
 	}
 
 	FT_New_Memory_Face(library, data, size, 0, &face);
-	FT_Set_Char_Size(face, 0, 12*64, 120, 120); // The 3DS would be classified as a "low-dpi" screen
+	FT_Set_Char_Size(face, 0, 12 << 6, 96, 96);
     FT_Select_Charmap(face, FT_ENCODING_UNICODE);
+
+    calcHeight = ((face->size->metrics.height)-(face->size->metrics.descender))/2;
+    calcHeight >>= 6;
 }
 
 Font::~Font() {
@@ -158,6 +161,15 @@ void Font::drawText(const std::u32string &str, int x, int y, const GFX::Color &c
 
 		x += glyph.advanceX;
 	}
+}
+
+int Font::width(const std::u32string &str) {
+    int width = 0;
+    for (unsigned int i=0; i<str.length(); i++) {
+		auto &glyph = getGlyph(str[i]);
+		width += glyph.advanceX;
+	}
+    return width;
 }
 
 }

@@ -13,13 +13,13 @@ void UI::Elements::DirectoryEntryElement::init() {
 		ripple.onTouchStart(x, y);
 		return true;
 	};
-	
+
 	this->onTouchMove = [this](int x, int y) {
 		ripple.setBounds(bounds);
 		ripple.setHotspot(x, y);
 		return true;
 	};
-	
+
 	this->onTouchEnd = [this](int x, int y) {
 		ripple.setBounds(bounds);
 		ripple.onTouchEnd(x, y);
@@ -32,9 +32,9 @@ void UI::Elements::DirectoryEntryElement::render(float timeDelta) {
 
 	if (data.valid) {
 		int height = bounds.height();
-		int textHeight = GFX::noto.face->size->metrics.height>>6;
+		int textHeight = GFX::noto.height();
 		// TODO: GFX::Color::Black
-		GFX::noto.drawText(data.name, bounds.left+8, bounds.top+(height/2)+(textHeight/4), GFX::Color(0, 0, 0));
+		GFX::noto.drawText(data.name, bounds.left+8, bounds.top+(height/2)+(textHeight/2), GFX::Color(0, 0, 0));
 	}
 
 	ripple.setCenter(bounds);

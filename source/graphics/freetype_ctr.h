@@ -49,8 +49,11 @@ public:
 	const Glyph &getGlyph(char32_t c);
 
 	void drawText(const std::u32string &str, int x, int y, const GFX::Color &color);
+	int width(const std::u32string &str);
+	int height() {return calcHeight;}
 private:
 	std::map<char32_t, Glyph> glyphs;
+	int calcHeight;
 };
 
 }
