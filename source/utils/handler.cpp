@@ -64,4 +64,5 @@ void Handler::run() {
 		}
 		svcClearEvent(eventHandle);
 	}
+  unlock();
 }

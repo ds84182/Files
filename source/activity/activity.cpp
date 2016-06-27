@@ -7,34 +7,24 @@
 #include <ui/layout.h>
 
 void Activity::dispatchStart() {
-	handler->postCallback([=]() {
-		this->onStart();
-	});
-		this->showLayers();
+	this->onStart();
+	this->showLayers();
 }
 
 void Activity::dispatchFinish() {
-	handler->postCallback([=]() {
-		this->onFinish();
-	});
+	this->onFinish();
 }
 
 void Activity::dispatchUpdate(float delta) {
-	//handler->postCallback([=]() {
-		this->onUpdate(delta);
-	//});
+	this->onUpdate(delta);
 }
 
 void Activity::dispatchKeyPressed(u32 keys) {
-	handler->postCallback([=]() {
-		this->onKeyPressed(keys);
-	});
+	this->onKeyPressed(keys);
 }
 
 void Activity::dispatchKeyReleased(u32 keys) {
-	handler->postCallback([=]() {
-		this->onKeyReleased(keys);
-	});
+	this->onKeyReleased(keys);
 }
 
 void Activity::onStart() {
@@ -83,7 +73,6 @@ void Activity::finish() {
 	this->hideLayers();
 	finishing = true;
 	ActivityManager::FinishNow();
-	handler->stopSafe();
 	delete this;
 }
 

@@ -10,9 +10,9 @@
 class FileBrowserActivity : public Activity {
 public:
 	// Every activity has its own thread with a handler. Events are delivered to the activity through the handler.
-	FileBrowserActivity(std::shared_ptr<Handler> handler) : Activity(handler) {init();}
-	FileBrowserActivity(std::shared_ptr<Handler> handler, const FS::Path &path) :
-		Activity(handler), path(path) {init();}
+	FileBrowserActivity() : Activity() {init();}
+	FileBrowserActivity(const FS::Path &path) :
+		Activity(), path(path) {init();}
 
 	// Called when the Activity is requested to start
 	virtual void onStart() override;

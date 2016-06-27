@@ -15,9 +15,7 @@ namespace UI {
 
 class Activity {
 public:
-	Activity(std::shared_ptr<Handler> handler) : handler(handler) {
-		// TODO: onCreate with saved data
-	}
+	Activity() {} // TODO: onCreate with saved data
 	virtual ~Activity() {};
 
 	void dispatchStart();
@@ -34,7 +32,6 @@ public:
 	void disableLayers();
 
 protected:
-	std::shared_ptr<Handler> handler;
 	std::vector<UI::Layer*> layers; // Do not modify directly
 
 	virtual void onStart();
@@ -45,9 +42,7 @@ protected:
 	virtual void onKeyReleased(u32 keys);
 
 	void addLayer(UI::Layer *layer);
-
 	void addLayout(UI::Layout &layout);
-
 	void removeLayer(UI::Layer *layer);
 
 	void finish();

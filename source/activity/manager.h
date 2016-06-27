@@ -25,9 +25,7 @@ inline void Enter(Activity *activity) {
 
 template <class T, class... Args>
 void Start(Args&&... args) {
-	std::shared_ptr<Handler> handler = std::make_shared<Handler>();
-	new HandlerThread(handler); // HandlerThread cleans itself up
-	Activity *activity = new T(handler, std::forward<Args>(args)...);
+	Activity *activity = new T(std::forward<Args>(args)...);
 	Enter(activity);
 }
 
