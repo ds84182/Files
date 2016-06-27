@@ -34,7 +34,7 @@ include $(DEVKITARM)/3ds_rules
 #---------------------------------------------------------------------------------
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
-SOURCES		:=	citro3d/source citro3d/source/maths source source/activity source/animation source/graphics source/ui source/ui/elements source/ui/layouts source/utils
+SOURCES		:=	citro3d/source citro3d/source/maths source source/activity source/animation source/graphics source/style source/ui source/ui/elements source/ui/layouts source/utils
 DATA		:=	data
 INCLUDES	:=	citro3d/include include source
 #ROMFS		:=	romfs
