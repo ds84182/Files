@@ -24,7 +24,7 @@ C3D_Mtx projection;
 int main() {
 	GFX::Init();
 
-	consoleInit(GFX_TOP, NULL);
+	//consoleInit(GFX_TOP, NULL);
 
 	sdmcInit();
 	FS::Path sdRoot("sdmc:/");
@@ -52,6 +52,9 @@ int main() {
 		GFX::FrameBegin();
 
 			UI::Manager::Compost(timeDelta);
+
+			GFX::DrawOn(GFX::Screen::TopLeft);
+			UI::Manager::Render(timeDelta);
 
 			GFX::DrawOn(GFX::Screen::Bottom);
 			UI::Manager::Render(timeDelta);

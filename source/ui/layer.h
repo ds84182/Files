@@ -43,6 +43,7 @@ public:
 	Bounds bounds;
 
 	float x = 0, y = 0, scaleX = 1, scaleY = 1;
+	bool topScreen = false;
 
 	bool hasBackground = false;
 	GFX::Color backgroundColor;
@@ -84,6 +85,9 @@ public:
 	}
 
 	void render(float timeDelta, bool duringCompost = false) {
+		if (topScreen && GFX::currentScreen == GFX::Screen::Bottom) return;
+		if ((!topScreen) && GFX::currentScreen != GFX::Screen::Bottom) return;
+
 		if (!duringCompost) {
 			auto mtx = GFX::PushMatrix();
 
