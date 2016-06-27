@@ -20,7 +20,7 @@ static touchPosition startTouch;
 static touchPosition lastTouch;
 static bool tapValid;
 
-void UpdateTemporaryFunctionToUpdateTheUIBecauseUIThreadDoesntExistYet(float delta) {
+void Update(float delta) {
 	ActivityManager::current->dispatchUpdate(delta);
 
 	auto focused = weakFocused.lock();
