@@ -21,7 +21,7 @@ int GFX::textureOffsetUniform;
 static C3D_Mtx projectionTop;
 static C3D_Mtx projectionBottom;
 
-static GFX::Screen currentScreen;
+GFX::Screen GFX::currentScreen;
 
 C3D_MtxStack GFX::stack;
 GFX::FragMode GFX::currentFragMode = GFX::FragMode::Unset;

@@ -49,6 +49,7 @@ class FrameBuffer;
 extern FrameBuffer TopLeft;
 extern FrameBuffer TopRight;
 extern FrameBuffer Bottom;
+extern Screen currentScreen;
 
 extern int textureScaleUniform;
 extern int textureOffsetUniform;
