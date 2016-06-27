@@ -23,6 +23,7 @@ public:
 private:
 	FS::Path path;
 	UI::Layouts::RecyclerLayout<UI::Elements::DirectoryEntryElement> directoryList;
+	UI::Layer topLayer;
 	Animation::Controller transitionController;
 
 	void init();

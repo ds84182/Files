@@ -1,6 +1,8 @@
 #include "file_browser.h"
 #include "manager.h"
 
+#include <style/color.hpp>
+
 using UI::Elements::DirectoryEntryData;
 
 void FileBrowserActivity::init() {
@@ -23,6 +25,13 @@ void FileBrowserActivity::init() {
 	};
 
 	addLayout(directoryList);
+
+	topLayer.topScreen = true;
+	topLayer.bounds = Bounds(400, 240); // TODO: Some screen size constants
+	topLayer.hasBackground = true;
+	topLayer.backgroundColor = Style::colorPrimary;
+
+	addLayer(&topLayer);
 }
 
 void FileBrowserActivity::onStart() {
