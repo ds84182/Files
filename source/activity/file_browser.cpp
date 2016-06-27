@@ -1,6 +1,8 @@
 #include "file_browser.h"
 #include "manager.h"
 
+#include <ui/elements/status_bar.hpp>
+
 #include <style/color.hpp>
 
 using UI::Elements::DirectoryEntryData;
@@ -30,6 +32,7 @@ void FileBrowserActivity::init() {
 	topLayer.bounds = Bounds(400, 240); // TODO: Some screen size constants
 	topLayer.hasBackground = true;
 	topLayer.backgroundColor = Style::colorPrimary;
+	topLayer.add(std::make_shared<UI::Elements::StatusBar>()); // TODO: Remove shared_ptr bullshit
 
 	addLayer(&topLayer);
 }
