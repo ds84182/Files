@@ -13,20 +13,24 @@ void FileBrowserActivity::init() {
 		if (data.type == FS::EntryType::Directory) {
 			printf("Enter directory\n");
 
-			FS::Path &dirpath = data.path;
-			handler->postCallbackDelayed([=]() {
+			//FS::Path &dirpath = data.path;
+			/*handler->postCallbackDelayed([=]() {
 				this->path = dirpath;
 				loadEntries();
-			}, 500);
+			}, 500);*/
+			ActivityManager::Start<FileBrowserActivity>(data.path);
 		}
 	};
 
-	directoryList.update();
-	// This updates because the layout bounds need to be set before compost starts
-
 	addLayout(directoryList);
+}
+
+void FileBrowserActivity::onStart() {
+	loadEntries();
 
 	directoryList.elementLayer.startCompost(true);
+	directoryList.elementLayer.hasBackground = true;
+	directoryList.elementLayer.backgroundColor = GFX::Color(255,255,255);
 
 	transitionController.start(
 		&Animation::LinearOutSlowInInterpolator,
@@ -34,7 +38,9 @@ void FileBrowserActivity::init() {
 			&directoryList.elementLayer.compostColor,
 			GFX::Color(255, 255, 255, 0),
 			GFX::Color(255, 255, 255, 255)),
-		0.270f);
+		0.270f, [&](Animation::Controller *controller, Animation::AnimationState &state) {
+			ActivityManager::HidePrevious();
+		});
 	transitionController.start(
 		&Animation::LinearOutSlowInInterpolator,
 		Animation::ValueTarget<float>(
@@ -42,10 +48,6 @@ void FileBrowserActivity::init() {
 			240*0.16,
 			0),
 		0.270f);
-}
-
-void FileBrowserActivity::onStart() {
-	loadEntries();
 }
 
 void FileBrowserActivity::loadEntries() {
@@ -73,9 +75,28 @@ void FileBrowserActivity::onUpdate(float delta) {
 	transitionController.update(delta);
 }
 
+void FileBrowserActivity::onFinish() {
+	ActivityManager::ShowPrevious();
+	transitionController.start(
+		&Animation::LinearOutSlowInInterpolator,
+		Animation::ValueTarget<GFX::Color>(
+			&directoryList.elementLayer.compostColor,
+			GFX::Color(255, 255, 255, 255),
+			GFX::Color(255, 255, 255, 0)),
+		0.270f, [&](Animation::Controller *controller, Animation::AnimationState &state) {
+			finish();
+		});
+	transitionController.start(
+		&Animation::LinearOutSlowInInterpolator,
+		Animation::ValueTarget<float>(
+			&directoryList.elementLayer.y,
+			0,
+			240*0.16),
+		0.270f);
+}
+
 void FileBrowserActivity::onKeyReleased(u32 keys) {
 	if (keys & KEY_B) {
-		path = path.parent();
-		loadEntries();
+		onFinish();
 	}
 }

@@ -1,15 +1,12 @@
 #pragma once
 
-#include <memory>
-
-#include "ui/element.h"
-#include "ui/layer.h"
-
 namespace UI {
+
+class LayerGroup;
+
 namespace Manager {
 
-void Add(UI::Layer *layer);
-void Remove(UI::Layer *layer);
+extern LayerGroup *RootLayerGroup;
 
 // Temporary function to update the UI because UI thread isn't a thing yet
 void UpdateTemporaryFunctionToUpdateTheUIBecauseUIThreadDoesntExistYet(float delta);

@@ -45,6 +45,7 @@ public:
 
 	Handler() {init();};
 	Handler(std::function<void(std::shared_ptr<Message>)> callback) : callback(callback) {init();};
+	~Handler();
 
 	// Runs the handler in a loop
 	void run();
@@ -181,8 +182,9 @@ public:
 	std::shared_ptr<Handler> handler;
 
 	HandlerThread(std::shared_ptr<Handler> handler) : ThreadContext([=](std::shared_ptr<Handler> handler) {
-        Current = handler;
+    Current = handler;
 		handler->run();
+		Current.reset();
 		delete this;
 		return 0;
 	}, handler, true), handler(handler) {}

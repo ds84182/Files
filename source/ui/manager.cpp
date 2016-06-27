@@ -1,30 +1,19 @@
 #include "manager.h"
 
 #include <3ds.h>
-#include <citro3d.h>
 
 #include <cstdio>
 #include <algorithm>
 #include <vector>
 
+#include "layer_group.h"
+
 #include <activity/manager.h>
-
-#include <graphics/core.h>
-
-#include <utils/math_ext.h>
 
 namespace UI {
 namespace Manager {
 
-static std::vector<UI::Layer*> layers;
-
-void Add(UI::Layer *layer) {
-	layers.push_back(layer);
-}
-
-void Remove(UI::Layer *layer) {
-	layers.erase(std::remove(layers.begin(), layers.end(), layer), layers.end());
-}
+UI::LayerGroup *RootLayerGroup = nullptr;
 
 static std::weak_ptr<UI::ElementBase> weakFocused;
 static touchPosition startTouch;
@@ -50,17 +39,21 @@ void UpdateTemporaryFunctionToUpdateTheUIBecauseUIThreadDoesntExistYet(float del
 		focused.reset();
 
 		// Find an element to focus
-		auto layerit = layers.rbegin();
-		auto layeritend = layers.rend();
-		for (;layerit != layeritend; ++layerit) {
-			auto &layer = *layerit;
 
-			focused = layer->find([&](auto &element) {
+		// Get last group
+		auto group = RootLayerGroup;
+		while (group && group->next) {
+			group = group->next;
+		}
+
+		while (group) {
+			focused = group->find([&](auto &element) {
 				return element->bounds.contains(touch.px, touch.py) &&
 					element->onTouchStart && element->onTouchStart(touch.px, touch.py);
 			});
 
 			if (focused) break;
+			group = group->prev;
 		}
 
 		if (focused) {
@@ -102,27 +95,19 @@ void UpdateTemporaryFunctionToUpdateTheUIBecauseUIThreadDoesntExistYet(float del
 	}
 }
 
-static C3D_Mtx compostMatrix;
-
 void Compost(float timeDelta) {
-	auto layerit = layers.begin();
-	auto layeritend = layers.end();
-	for (;layerit != layeritend; ++layerit) {
-		auto &layer = *layerit;
-		if (layer->compost) {
-			Mtx_Ortho(&compostMatrix, 0.0, float(layer->compostFB.width), float(layer->compostFB.height), 0.0, 0.0, 1.0);
-			GFX::DrawOn(&layer->compostFB, &compostMatrix, true);
-			layer->render(timeDelta, true);
-		}
+	auto group = RootLayerGroup;
+	while (group) {
+		group->compost(timeDelta);
+		group = group->next;
 	}
 }
 
 void Render(float timeDelta) {
-	auto layerit = layers.begin();
-	auto layeritend = layers.end();
-	for (;layerit != layeritend; ++layerit) {
-		auto &layer = *layerit;
-		layer->render(timeDelta);
+	auto group = RootLayerGroup;
+	while (group) {
+		group->render(timeDelta);
+		group = group->next;
 	}
 }
 

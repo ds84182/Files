@@ -15,9 +15,9 @@ public:
 		Activity(handler), path(path) {init();}
 
 	// Called when the Activity is requested to start
-	// TODO: Load directory stuff on worker thread, push to this activity's thread
 	virtual void onStart() override;
 	virtual void onUpdate(float delta) override;
+	virtual void onFinish() override;
 	virtual void onKeyReleased(u32 keys) override;
 
 private:

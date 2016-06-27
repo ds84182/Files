@@ -23,6 +23,8 @@ namespace Manager {
 	void Compost(float);
 }
 
+class LayerGroup;
+
 /*
 Layers manage a list of Elements. This is the only way to group multiple elements together.
 
@@ -162,7 +164,7 @@ private:
 	bool compostAlwaysDirty = false; // Always render to framebuffer every frame
 	GFX::FrameBuffer compostFB;
 
-	friend void UI::Manager::Compost(float);
+	friend class UI::LayerGroup;
 };
 
 }

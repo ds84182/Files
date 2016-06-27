@@ -16,7 +16,9 @@ extern std::deque<Activity*> stack;
 // This is needed because the Activity may only take requests as a suggestion
 // For instance, requestFinish could prompt the Activity to play an animation before exiting fully
 inline void Enter(Activity *activity) {
-	stack.emplace_back(current);
+	if (current) {
+		stack.emplace_back(current);
+	}
 	current = activity;
 	current->dispatchStart();
 }
@@ -29,6 +31,18 @@ void Start(Args&&... args) {
 	Enter(activity);
 }
 
+inline void HidePrevious() {
+	if (!stack.empty()) {
+		stack.back()->hideLayers();
+	}
+}
+
+inline void ShowPrevious() {
+	if (!stack.empty()) {
+		stack.back()->showLayers();
+	}
+}
+
 inline void Finish() {
 	current->dispatchFinish();
 }
@@ -39,6 +53,7 @@ inline void FinishNow() {
 	} else {
 		current = stack.back();
 		stack.pop_back();
+		current->showLayers();
 	}
 }
 

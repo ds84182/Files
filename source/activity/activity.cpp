@@ -3,10 +3,14 @@
 #include <deque>
 #include <memory>
 
+#include <ui/layer.h>
+#include <ui/layout.h>
+
 void Activity::dispatchStart() {
 	handler->postCallback([=]() {
 		this->onStart();
 	});
+		this->showLayers();
 }
 
 void Activity::dispatchFinish() {
@@ -33,7 +37,9 @@ void Activity::dispatchKeyReleased(u32 keys) {
 	});
 }
 
-void Activity::onStart() {}
+void Activity::onStart() {
+	ActivityManager::HidePrevious();
+}
 
 void Activity::onFinish() {
 	finish();
@@ -46,9 +52,7 @@ void Activity::onKeyReleased(u32 keys) {}
 
 void Activity::addLayer(UI::Layer *layer) {
 	layers.push_back(layer);
-	if (shown) {
-		UI::Manager::Add(layer);
-	}
+	layerGroup.add(layer);
 }
 
 void Activity::addLayout(UI::Layout &layout) {
@@ -59,17 +63,25 @@ void Activity::addLayout(UI::Layout &layout) {
 
 void Activity::removeLayer(UI::Layer *layer) {
 	layers.erase(std::remove(layers.begin(), layers.end(), layer), layers.end());
-	if (shown) {
-		UI::Manager::Remove(layer);
-	}
+	layerGroup.remove(layer);
+}
+
+void Activity::hideLayers() {
+	layerGroup.disabled = true;
+}
+
+void Activity::showLayers() {
+	layerGroup.disabled = false;
+}
+
+void Activity::disableLayers() {
+	layerGroup.disabled = true;
+	layerGroup.overrideDisableForRender = true;
 }
 
 void Activity::finish() {
-	shown = false;
+	this->hideLayers();
 	finishing = true;
-	for (auto &layer : layers) {
-		UI::Manager::Remove(layer);
-	}
 	ActivityManager::FinishNow();
 	handler->stopSafe();
 	delete this;
@@ -77,7 +89,7 @@ void Activity::finish() {
 
 namespace ActivityManager {
 
-Activity *current;
+Activity *current = nullptr;
 std::deque<Activity*> stack;
 
 }
