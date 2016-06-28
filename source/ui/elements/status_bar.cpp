@@ -38,10 +38,10 @@ void UI::Elements::StatusBar::render(float timeDelta) {
     font.drawText(Data.systemTime, bounds.right-textWidth-8, 12-textHeight/2, GFX::Color(255,255,255));
 
     struct mallinfo mi = mallinfo();
-    sprintf(memUsageBuffer, "Linear: %d/%d; Normal: %d/%d",
+    sprintf(memUsageBuffer, "Linear: %d/%d; VRAM: %d/%d",
         __ctru_linear_heap_size-linearSpaceFree(), __ctru_linear_heap_size,
-        //0x600000-vramSpaceFree(), 0x600000);
-        mi.uordblks, __ctru_heap_size);
+        0x600000-vramSpaceFree(), 0x600000);
+        //mi.uordblks, __ctru_heap_size);
     std::u32string memUsage;
     convertToU32(memUsageBuffer, memUsage);
     font.drawText(memUsage, 8, 12-textHeight/2, GFX::Color(255,255,255));
