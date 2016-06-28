@@ -10,6 +10,7 @@
 
 // UI Subsystem
 #include <ui/manager.hpp>
+#include <ui/status_bar_manager.hpp>
 
 // Utilities
 #include <utils/filesystem/path.hpp>
@@ -25,6 +26,7 @@ int main() {
 	sdmcInit();
 	FS::Path sdRoot("sdmc:/");
 
+	UI::StatusBarManager::Init();
 	ActivityManager::Start<FileBrowserActivity>((const FS::Path&)sdRoot);
 
 	u64 lastTick = svcGetSystemTick();

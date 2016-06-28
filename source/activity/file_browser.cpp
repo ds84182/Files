@@ -27,7 +27,6 @@ public:
 private:
 	FS::Path path;
 	UI::Layouts::RecyclerLayout<DirectoryEntryElement> directoryList;
-	UI::Layer topLayer;
 	Animation::Controller transitionController;
 	bool transitionFinished = false;
 
@@ -50,14 +49,6 @@ void FileBrowserActivity::init() {
 	};
 
 	addLayout(directoryList);
-
-	topLayer.topScreen = true;
-	topLayer.bounds = Bounds(400, 240); // TODO: Some screen size constants
-	topLayer.hasBackground = true;
-	topLayer.backgroundColor = Style::colorPrimary;
-	topLayer.add(std::make_shared<UI::Elements::StatusBar>()); // TODO: Remove shared_ptr bullshit
-
-	addLayer(&topLayer);
 }
 
 void FileBrowserActivity::onStart() {
