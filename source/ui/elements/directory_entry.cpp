@@ -34,7 +34,7 @@ void UI::Elements::DirectoryEntryElement::render(float timeDelta) {
 		int height = bounds.height();
 		int textHeight = GFX::noto.height();
 		// TODO: GFX::Color::Black
-		GFX::noto.drawText(data.name, bounds.left+8, bounds.top+(height/2)+(textHeight/2), GFX::Color(0, 0, 0));
+		GFX::noto.drawText(data.name, bounds.left+8, bounds.top+((height/2)-(textHeight/2)), GFX::Color(0, 0, 0));
 	}
 
 	ripple.setCenter(bounds);

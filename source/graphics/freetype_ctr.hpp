@@ -30,8 +30,9 @@ public:
 	u32 advanceX;
 	u32 bitmapTop;
 	u32 bitmapLeft;
+	float baseline;
 
-	Glyph(FT_Face face, char32_t c);
+	Glyph(FT_Face face, char32_t c, float baseline);
 	~Glyph();
 
 	void render(int x, int y) const;
@@ -54,6 +55,7 @@ public:
 private:
 	std::map<char32_t, Glyph> glyphs;
 	int calcHeight;
+	float baseline;
 };
 
 }

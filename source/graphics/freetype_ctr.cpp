@@ -14,9 +14,10 @@ static unsigned int next_pow2(unsigned int v) {
     return v+1;
 }
 
-Glyph::Glyph(FT_Face face, char32_t c) {
+Glyph::Glyph(FT_Face face, char32_t c, float baseline) {
 	FT_Load_Glyph(face, FT_Get_Char_Index(face, c), FT_LOAD_DEFAULT);
 	FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL);
+    this->baseline = baseline;
 
 	unsigned int initialWidth, initialHeight;
 	initialWidth = width = face->glyph->bitmap.width;
@@ -101,7 +102,7 @@ void Glyph::render(int x, int y) const {
 
     // bitmapLeft and bitmapTop are unsigned, so that makes the ENTIRE expression unsigned
     // it makes no sense because floats are also signed... so...
-	Mtx_Translate(mtx, x+(int)bitmapLeft, y-(int)bitmapTop, 0.0f);
+	Mtx_Translate(mtx, x+(int)bitmapLeft, (y-(int)bitmapTop)+baseline, 0.0f);
     //Mtx_Translate(mtx, x+bitmapLeft, y-bitmapTop, 0);
 	Mtx_Scale(mtx, width, height, 1);
 
@@ -129,13 +130,14 @@ Font::Font(const u8 *data, size_t size, int faceIndex) {
 	}
 
 	FT_New_Memory_Face(library, data, size, 0, &face);
-	FT_Set_Char_Size(face, 0, 14 << 6, 96, 96);
+	FT_Set_Char_Size(face, 0, 16 << 6, 96, 96);
     FT_Select_Charmap(face, FT_ENCODING_UNICODE);
 
-    calcHeight = FT_MulFix(face->size->metrics.y_scale,
-        ((face->size->metrics.height)-(face->size->metrics.descender)));
+    calcHeight = face->size->metrics.height;
     calcHeight >>= 6;
-    calcHeight++; // God damn off by ones
+    // 1.25 is magic line height for true type fonts
+    // Thanks Love2D
+    baseline = floorf(calcHeight / 1.25f + 0.5f);
 }
 
 Font::~Font() {
@@ -146,7 +148,7 @@ const Glyph &Font::getGlyph(char32_t c) {
 	if (!glyphs.count(c)) {
 		glyphs.emplace(std::piecewise_construct,
 			std::make_tuple(c),
-			std::make_tuple(face, c));
+			std::make_tuple(face, c, baseline));
 	}
 
 	return glyphs.at(c);

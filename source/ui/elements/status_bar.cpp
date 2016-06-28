@@ -20,5 +20,5 @@ void UI::Elements::StatusBar::render(float timeDelta) {
     int textWidth = GFX::noto.width(Data.systemTime);
     int textHeight = GFX::noto.height();
     // TODO: GFX::Color::Black
-    GFX::noto.drawText(Data.systemTime, bounds.right-textWidth-8, 12+(textHeight/2), GFX::Color(255,255,255));
+    GFX::noto.drawText(Data.systemTime, bounds.right-textWidth-8, 12-textHeight/2, GFX::Color(255,255,255));
 }
