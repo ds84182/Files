@@ -31,10 +31,11 @@ void UI::Elements::DirectoryEntryElement::render(float timeDelta) {
 	GFX::Scissor scissor(bounds);
 
 	if (data.valid) {
+		auto &font = GFX::Fonts::Body1;
 		int height = bounds.height();
-		int textHeight = GFX::noto.height();
+		int textHeight = font.height();
 		// TODO: GFX::Color::Black
-		GFX::noto.drawText(data.name, bounds.left+8, bounds.top+((height/2)-(textHeight/2)), GFX::Color(0, 0, 0));
+		font.drawText(data.name, bounds.left+16, bounds.top+((height/2)-(textHeight/2)), GFX::Color(0, 0, 0));
 	}
 
 	ripple.setCenter(bounds);

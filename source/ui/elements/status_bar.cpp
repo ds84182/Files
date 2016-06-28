@@ -17,8 +17,9 @@ void UI::Elements::StatusBar::render(float timeDelta) {
     GFX::Rectangle rect(bounds.left, bounds.top, bounds.width(), bounds.height(), Style::colorPrimaryDark);
     rect.render();
 
-    int textWidth = GFX::noto.width(Data.systemTime);
-    int textHeight = GFX::noto.height();
+    auto &font = GFX::Fonts::CaptionMedium;
+    int textWidth = font.width(Data.systemTime);
+    int textHeight = font.height();
     // TODO: GFX::Color::Black
-    GFX::noto.drawText(Data.systemTime, bounds.right-textWidth-8, 12-textHeight/2, GFX::Color(255,255,255));
+    font.drawText(Data.systemTime, bounds.right-textWidth-8, 12-textHeight/2, GFX::Color(255,255,255));
 }

@@ -2,6 +2,7 @@
 
 #include "vshader_shbin.h"
 
+#include "fonts.hpp"
 #include "framebuffer.hpp"
 #include "scissor.hpp"
 
@@ -75,6 +76,8 @@ void GFX::Init() {
 	// Confligure Alpha Blending to keep the dest buffer at 255 (Like a normal blend I guess)
 	// This fixes a bug where Ripples can "punch" through a composted framebuffer
 	C3D_AlphaBlend(GPU_BLEND_ADD, GPU_BLEND_ADD, GPU_SRC_ALPHA, GPU_ONE_MINUS_SRC_ALPHA, GPU_ONE, GPU_ONE_MINUS_SRC_ALPHA);
+
+	Fonts::Init();
 }
 
 void GFX::FrameBegin() {

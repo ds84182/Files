@@ -22,6 +22,7 @@
 C3D_Mtx projection;
 
 int main() {
+	romfsInit();
 	GFX::Init();
 
 	//consoleInit(GFX_TOP, NULL);

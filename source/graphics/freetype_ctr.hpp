@@ -40,12 +40,16 @@ public:
 
 class Font {
 public:
-	FT_Face face;
+	FT_Face face = nullptr;
 
-	Font(const u8 *data, size_t size, int faceIndex = 0);
-	//Font(std::string path, int faceIndex = 0);
+	Font(const u8 *data, size_t size, int fontSize);
+	Font(const Font &font) = delete;
+	Font(Font &font) = delete;
+	Font() {};
 
 	~Font();
+
+	void init(const u8 *data, size_t size, int fontSize);
 
 	const Glyph &getGlyph(char32_t c);
 

@@ -121,16 +121,27 @@ void Glyph::render(int x, int y) const {
 }
 
 static FT_Library library;
-static bool init = false;
+static bool ftinit = false;
 
-Font::Font(const u8 *data, size_t size, int faceIndex) {
-	if (!init) {
+Font::Font(const u8 *data, size_t size, int fontSize) {
+    init(data, size, fontSize);
+}
+
+Font::~Font() {
+    if (face) {
+	    FT_Done_Face(face);
+    }
+}
+
+void Font::init(const u8 *data, size_t size, int fontSize) {
+	if (!ftinit) {
 		FT_Init_FreeType(&library);
-		init = true;
+		ftinit = true;
 	}
 
 	FT_New_Memory_Face(library, data, size, 0, &face);
-	FT_Set_Char_Size(face, 0, 16 << 6, 96, 96);
+	//FT_Set_Char_Size(face, 0, fontSize << 6, 96, 96);
+    FT_Set_Pixel_Sizes(face, fontSize, fontSize);
     FT_Select_Charmap(face, FT_ENCODING_UNICODE);
 
     calcHeight = face->size->metrics.height;
@@ -138,10 +149,6 @@ Font::Font(const u8 *data, size_t size, int faceIndex) {
     // 1.25 is magic line height for true type fonts
     // Thanks Love2D
     baseline = floorf(calcHeight / 1.25f + 0.5f);
-}
-
-Font::~Font() {
-	FT_Done_Face(face);
 }
 
 const Glyph &Font::getGlyph(char32_t c) {
