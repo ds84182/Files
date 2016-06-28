@@ -14,7 +14,6 @@ using UI::Elements::DirectoryEntryElement;
 
 class FileBrowserActivity : public Activity {
 public:
-	// Every activity has its own thread with a handler. Events are delivered to the activity through the handler.
 	FileBrowserActivity() : Activity() {init();}
 	FileBrowserActivity(const FS::Path &path) :
 		Activity(), path(path) {init();}
@@ -46,11 +45,6 @@ void FileBrowserActivity::init() {
 		if (data.type == FS::EntryType::Directory) {
 			printf("Enter directory\n");
 
-			//FS::Path &dirpath = data.path;
-			/*handler->postCallbackDelayed([=]() {
-				this->path = dirpath;
-				loadEntries();
-			}, 500);*/
 			ActivityManager::Start<FileBrowserActivity>(data.path);
 		}
 	};
