@@ -75,10 +75,3 @@ void Activity::finish() {
 	ActivityManager::FinishNow();
 	delete this;
 }
-
-namespace ActivityManager {
-
-Activity *current = nullptr;
-std::deque<Activity*> stack;
-
-}

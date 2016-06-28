@@ -31,6 +31,9 @@ public:
 	}
 	void disableLayers();
 
+	template <class T, typename... Args>
+	static Activity *Create(Args&&... args);
+
 protected:
 	std::vector<UI::Layer*> layers; // Do not modify directly
 
@@ -51,3 +54,6 @@ private:
 	bool shown = false;
 	bool finishing = false;
 };
+
+// Class forward refs
+class FileBrowserActivity;

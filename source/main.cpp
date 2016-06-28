@@ -4,7 +4,6 @@
 
 // Activity Subsystem
 #include <activity/manager.hpp>
-#include <activity/file_browser.hpp>
 
 // Graphics Subsystem
 #include <graphics/core.hpp>
@@ -30,7 +29,7 @@ int main() {
 	sdmcInit();
 	FS::Path sdRoot("sdmc:/");
 
-	ActivityManager::Start<FileBrowserActivity>(sdRoot);
+	ActivityManager::Start<FileBrowserActivity>((const FS::Path&)sdRoot);
 
 	u64 lastTick = svcGetSystemTick();
 

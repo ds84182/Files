@@ -1,17 +1,46 @@
-#include "file_browser.hpp"
+#include "activity.hpp"
 #include "manager.hpp"
 
+#include <animation/controller.hpp>
+
 #include <ui/elements/status_bar.hpp>
+#include <ui/elements/directory_entry.hpp>
+#include <ui/layouts/recycler_layout.hpp>
 
 #include <style/color.hpp>
 
 using UI::Elements::DirectoryEntryData;
+using UI::Elements::DirectoryEntryElement;
+
+class FileBrowserActivity : public Activity {
+public:
+	// Every activity has its own thread with a handler. Events are delivered to the activity through the handler.
+	FileBrowserActivity() : Activity() {init();}
+	FileBrowserActivity(const FS::Path &path) :
+		Activity(), path(path) {init();}
+
+	// Called when the Activity is requested to start
+	virtual void onStart() override;
+	virtual void onUpdate(float delta) override;
+	virtual void onFinish() override;
+	virtual void onKeyReleased(u32 keys) override;
+
+private:
+	FS::Path path;
+	UI::Layouts::RecyclerLayout<DirectoryEntryElement> directoryList;
+	UI::Layer topLayer;
+	Animation::Controller transitionController;
+	bool transitionFinished = false;
+
+	void init();
+	void loadEntries();
+};
 
 void FileBrowserActivity::init() {
 	directoryList.bounds = Bounds(320, 240); // Use the entire screen
 	directoryList.elementSize = 48;
 
-	directoryList.onSelected = [=](DirectoryEntryData &data, int index) {
+	directoryList.onSelected = [=](const DirectoryEntryData &data, int index) {
 		printf("File selected: %s (index %d)\n", data.path.str().c_str(), index);
 
 		if (data.type == FS::EntryType::Directory) {
@@ -114,4 +143,14 @@ void FileBrowserActivity::onKeyReleased(u32 keys) {
 	if (keys & KEY_B) {
 		onFinish();
 	}
+}
+
+template <>
+Activity *Activity::Create<FileBrowserActivity>() {
+	return new FileBrowserActivity();
+}
+
+template <>
+Activity *Activity::Create<FileBrowserActivity>(const FS::Path &path) {
+	return new FileBrowserActivity(path);
 }

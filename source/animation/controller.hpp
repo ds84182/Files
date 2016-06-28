@@ -69,7 +69,6 @@ public:
 			if (state.state == State::Running) {
 				state.time += state.reverse ? -delta : delta;
 
-				// TODO: onDone callbacks?
 				if ((!state.reverse) && state.time > state.duration) {
 					state.time = state.duration;
 					state.state = State::Done;
