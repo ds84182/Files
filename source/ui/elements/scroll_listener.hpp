@@ -2,8 +2,6 @@
 
 #include <memory>
 
-#include <graphics/fonts.hpp>
-
 #include <ui/element.hpp>
 
 namespace UI {
@@ -27,48 +25,16 @@ public:
 	}
 	virtual ~ScrollListenerElement() = default;
 
-	virtual void render(float timeDelta) override {};
+	virtual void render(float timeDelta) override;
 
 private:
 	int touchX, touchY;
+	int lastVelocity = 0;
+	int scrollVelocity = 0;
 	bool hasMoved = false;
 
-	void hookCallbacks() {
-		onTouchStart = [&](int x, int y) {
-			touchX = x;
-			touchY = y;
-			hasMoved = false;
-			data->forwardTouchStart(x, y);
-			return true; // We used the event to do something, return true
-		};
-
-		onTouchMove = [&](int x, int y) {
-			hasMoved = true;
-			data->forwardTouchMove(x, y);
-			handleMove(x, y);
-			return true; // We used the event to do something, return true
-		};
-
-		onTouchEnd = [&](int x, int y) {
-			data->forwardTouchEnd(x, y);
-			if (hasMoved) // Only handle move if onTouchMove was fired
-				handleMove(x, y);
-			return true; // We used the event to do something, return true
-		};
-
-		onTap = [&](int x, int y) {
-			data->forwardTap(x, y); // Forward the tap to the listener to handle
-			return true;
-		};
-	}
-
-	void handleMove(int x, int y) {
-		// TODO: Horizontal
-		int diff = touchY-y;
-		data->onScroll(-diff);
-		touchX = x;
-		touchY = y;
-	}
+	void hookCallbacks();
+	void handleMove(int x, int y, bool up);
 };
 
 }
