@@ -132,8 +132,10 @@ Font::Font(const u8 *data, size_t size, int faceIndex) {
 	FT_Set_Char_Size(face, 0, 12 << 6, 96, 96);
     FT_Select_Charmap(face, FT_ENCODING_UNICODE);
 
-    calcHeight = ((face->size->metrics.height)-(face->size->metrics.descender))/2;
+    calcHeight = FT_MulFix(face->size->metrics.y_scale,
+        ((face->size->metrics.height)-(face->size->metrics.descender)));
     calcHeight >>= 6;
+    calcHeight++; // God damn off by ones
 }
 
 Font::~Font() {
