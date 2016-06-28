@@ -7,18 +7,14 @@
 
 // Graphics Subsystem
 #include <graphics/core.hpp>
-#include <graphics/rectangle.hpp>
 
 // UI Subsystem
 #include <ui/manager.hpp>
 
 // Utilities
 #include <utils/filesystem/path.hpp>
-#include <utils/math_ext.hpp>
 
 #define TICKS_PER_SEC (268123480)
-
-C3D_Mtx projection;
 
 int main() {
 	romfsInit();
@@ -43,8 +39,7 @@ int main() {
 
 		// Respond to user input
 		u32 kDown = hidKeysDown();
-		u32 kHeld = hidKeysHeld();
-		if (kDown & KEY_START)
+		if (kDown & KEY_START) // TODO: Exit to home menu when activity is nullptr
 			break; // break in order to return to hbmenu
 
 		UI::Manager::Update(timeDelta);
