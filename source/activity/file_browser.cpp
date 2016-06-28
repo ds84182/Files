@@ -9,7 +9,7 @@ using UI::Elements::DirectoryEntryData;
 
 void FileBrowserActivity::init() {
 	directoryList.bounds = Bounds(320, 240); // Use the entire screen
-	directoryList.elementSize = 64;
+	directoryList.elementSize = 48;
 
 	directoryList.onSelected = [=](DirectoryEntryData &data, int index) {
 		printf("File selected: %s (index %d)\n", data.path.str().c_str(), index);
@@ -85,6 +85,9 @@ void FileBrowserActivity::loadEntries() {
 
 void FileBrowserActivity::onUpdate(float delta) {
 	transitionController.update(delta);
+	if (transitionFinished) {
+		finish();
+	}
 }
 
 void FileBrowserActivity::onFinish() {
@@ -96,7 +99,7 @@ void FileBrowserActivity::onFinish() {
 			GFX::Color(255, 255, 255, 255),
 			GFX::Color(255, 255, 255, 0)),
 		0.270f, [&](Animation::Controller *controller, Animation::AnimationState &state) {
-			finish();
+			transitionFinished = true;
 		});
 	transitionController.start(
 		&Animation::LinearOutSlowInInterpolator,

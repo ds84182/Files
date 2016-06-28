@@ -25,6 +25,7 @@ private:
 	UI::Layouts::RecyclerLayout<UI::Elements::DirectoryEntryElement> directoryList;
 	UI::Layer topLayer;
 	Animation::Controller transitionController;
+	bool transitionFinished = false;
 
 	void init();
 	void loadEntries();
