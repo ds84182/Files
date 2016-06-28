@@ -1,4 +1,4 @@
-#include "scissor.h"
+#include "scissor.hpp"
 
 #include <cstdio>
 

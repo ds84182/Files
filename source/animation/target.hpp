@@ -2,7 +2,7 @@
 
 #include <functional>
 
-#include <graphics/core.h>
+#include <graphics/core.hpp>
 
 namespace Animation {
 

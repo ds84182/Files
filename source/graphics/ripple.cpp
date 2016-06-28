@@ -1,4 +1,4 @@
-#include "ripple.h"
+#include "ripple.hpp"
 
 // Constants and formulas [stolen] from Android Lollipop
 const float waveTouchDownAcceleration = 1024.0f;

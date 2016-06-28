@@ -1,10 +1,10 @@
-#include "manager.h"
+#include "manager.hpp"
 
 #include <deque>
 #include <memory>
 
-#include <ui/layer.h>
-#include <ui/layout.h>
+#include <ui/layer.hpp>
+#include <ui/layout.hpp>
 
 void Activity::dispatchStart() {
 	this->onStart();

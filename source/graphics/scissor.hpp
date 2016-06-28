@@ -2,7 +2,7 @@
 
 #include <citro3d.h>
 
-#include "utils/bounds.h"
+#include <utils/bounds.hpp>
 
 namespace GFX {
 

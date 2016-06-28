@@ -1,4 +1,4 @@
-#include "time_interpolator.h"
+#include "time_interpolator.hpp"
 
 namespace Animation {
 

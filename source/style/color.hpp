@@ -1,6 +1,6 @@
 #pragma once
 
-#include <graphics/core.h>
+#include <graphics/core.hpp>
 
 namespace Style {
 

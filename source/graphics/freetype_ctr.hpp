@@ -16,7 +16,7 @@
 #include FT_BITMAP_H
 
 // Graphics Subsystem
-#include "core.h"
+#include "core.hpp"
 
 namespace GFX {
 

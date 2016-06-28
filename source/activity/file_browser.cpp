@@ -1,5 +1,5 @@
-#include "file_browser.h"
-#include "manager.h"
+#include "file_browser.hpp"
+#include "manager.hpp"
 
 #include <ui/elements/status_bar.hpp>
 

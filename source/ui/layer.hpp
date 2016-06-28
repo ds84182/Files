@@ -7,15 +7,15 @@
 #include <memory>
 #include <vector>
 
-#include <graphics/core.h>
-#include <graphics/framebuffer.h>
-#include <graphics/rectangle.h>
-#include <graphics/scissor.h>
-#include <graphics/texture.h>
+#include <graphics/core.hpp>
+#include <graphics/framebuffer.hpp>
+#include <graphics/rectangle.hpp>
+#include <graphics/scissor.hpp>
+#include <graphics/texture.hpp>
 
-#include "element.h"
+#include "element.hpp"
 
-#include <utils/bounds.h>
+#include <utils/bounds.hpp>
 
 namespace UI {
 

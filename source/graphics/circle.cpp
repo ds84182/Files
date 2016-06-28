@@ -1,7 +1,7 @@
-#include "circle.h"
+#include "circle.hpp"
 
-#include "attribute.h"
-#include "core.h"
+#include "attribute.hpp"
+#include "core.hpp"
 
 #include <cmath>
 #include <cstdlib>

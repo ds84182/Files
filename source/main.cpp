@@ -3,19 +3,19 @@
 #include <citro3d.h>
 
 // Activity Subsystem
-#include "activity/manager.h"
-#include "activity/file_browser.h"
+#include <activity/manager.hpp>
+#include <activity/file_browser.hpp>
 
 // Graphics Subsystem
-#include "graphics/core.h"
-#include "graphics/rectangle.h"
+#include <graphics/core.hpp>
+#include <graphics/rectangle.hpp>
 
 // UI Subsystem
-#include "ui/manager.h"
+#include <ui/manager.hpp>
 
 // Utilities
-#include "utils/filesystem/path.h"
-#include "utils/math_ext.h"
+#include <utils/filesystem/path.hpp>
+#include <utils/math_ext.hpp>
 
 #define TICKS_PER_SEC (268123480)
 

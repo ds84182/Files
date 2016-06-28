@@ -3,10 +3,10 @@
 #include <algorithm>
 #include <functional>
 
-#include "ui/layer_group.h"
-#include "ui/manager.h"
+#include <ui/layer_group.hpp>
+#include <ui/manager.hpp>
 
-#include "utils/handler.h"
+#include <utils/handler.hpp>
 
 namespace UI {
 	class Layer;

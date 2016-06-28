@@ -1,8 +1,8 @@
-#include "directory_entry.h"
+#include "directory_entry.hpp"
 
-#include "graphics/circle.h"
-#include "graphics/rectangle.h"
-#include "graphics/scissor.h"
+#include <graphics/circle.hpp>
+#include <graphics/rectangle.hpp>
+#include <graphics/scissor.hpp>
 
 using Animation::LogDecelerationInterpolatorFactory;
 using Animation::ValueTarget;

@@ -1,7 +1,7 @@
-#include "rectangle.h"
+#include "rectangle.hpp"
 
-#include "attribute.h"
-#include "core.h"
+#include "attribute.hpp"
+#include "core.hpp"
 
 static void *vbodata = nullptr;
 

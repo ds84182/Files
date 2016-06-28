@@ -2,10 +2,10 @@
 
 #include <3ds.h>
 
-#include <graphics/core.h>
-#include <graphics/fonts.h>
+#include <graphics/core.hpp>
+#include <graphics/fonts.hpp>
 
-#include <ui/element.h>
+#include <ui/element.hpp>
 
 namespace UI {
 namespace Elements {

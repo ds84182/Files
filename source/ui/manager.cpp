@@ -1,4 +1,4 @@
-#include "manager.h"
+#include "manager.hpp"
 
 #include <3ds.h>
 
@@ -6,9 +6,9 @@
 #include <algorithm>
 #include <vector>
 
-#include "layer_group.h"
+#include "layer_group.hpp"
 
-#include <activity/manager.h>
+#include <activity/manager.hpp>
 
 namespace UI {
 namespace Manager {

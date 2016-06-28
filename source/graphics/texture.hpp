@@ -5,7 +5,7 @@
 #include <citro3d.h>
 
 // Graphics Subsystem
-#include "core.h"
+#include "core.hpp"
 
 namespace GFX {
 

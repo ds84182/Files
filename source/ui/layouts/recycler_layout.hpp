@@ -6,11 +6,11 @@
 #include <memory>
 #include <vector>
 
-#include "ui/layer.h"
-#include "ui/layout.h"
-#include "ui/manager.h"
+#include <ui/layer.hpp>
+#include <ui/layout.hpp>
+#include <ui/manager.hpp>
 
-#include "ui/elements/scroll_listener.h"
+#include <ui/elements/scroll_listener.hpp>
 
 namespace UI {
 namespace Layouts {

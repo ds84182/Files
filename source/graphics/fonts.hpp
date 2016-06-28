@@ -1,6 +1,6 @@
 #pragma once
 
-#include "freetype_ctr.h"
+#include "freetype_ctr.hpp"
 
 // Fonts
 #include "noto_ttf.h"

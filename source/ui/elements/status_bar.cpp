@@ -1,7 +1,7 @@
 #include "status_bar.hpp"
 
-#include <graphics/rectangle.h>
-#include <graphics/scissor.h>
+#include <graphics/rectangle.hpp>
+#include <graphics/scissor.hpp>
 
 #include <style/color.hpp>
 

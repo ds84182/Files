@@ -6,7 +6,7 @@
 #include <3ds.h>
 #include <citro3d.h>
 
-#include "core.h"
+#include "core.hpp"
 
 namespace GFX {
 

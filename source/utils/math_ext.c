@@ -1,4 +1,4 @@
-#include "math_ext.h"
+#include "math_ext.hpp"
 
 void Mtx_Ortho(C3D_Mtx* mtx, float left, float right, float top, float bottom, float near, float far) {
 	C3D_Mtx mp;

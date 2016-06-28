@@ -1,11 +1,11 @@
 #pragma once
 
-#include "activity.h"
+#include "activity.hpp"
 
-#include <animation/controller.h>
+#include <animation/controller.hpp>
 
-#include <ui/layouts/recycler_layout.h>
-#include <ui/elements/directory_entry.h>
+#include <ui/layouts/recycler_layout.hpp>
+#include <ui/elements/directory_entry.hpp>
 
 class FileBrowserActivity : public Activity {
 public:

@@ -3,7 +3,7 @@
 #include <string>
 #include <dirent.h>
 
-#include "path.h"
+#include "path.hpp"
 
 namespace FS {
 

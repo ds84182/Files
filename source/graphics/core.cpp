@@ -1,9 +1,9 @@
-#include "core.h"
+#include "core.hpp"
 
 #include "vshader_shbin.h"
 
-#include "framebuffer.h"
-#include "scissor.h"
+#include "framebuffer.hpp"
+#include "scissor.hpp"
 
 #define CLEAR_COLOR 0xFFFFFFFF
 

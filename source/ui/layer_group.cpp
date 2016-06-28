@@ -1,15 +1,15 @@
-#include "layer_group.h"
+#include "layer_group.hpp"
 
 #include <citro3d.h>
 
 #include <algorithm>
 #include <cstdio>
 
-#include "manager.h"
+#include "manager.hpp"
 
-#include <graphics/core.h>
+#include <graphics/core.hpp>
 
-#include <utils/math_ext.h>
+#include <utils/math_ext.hpp>
 
 UI::LayerGroup::LayerGroup() {
   if (UI::Manager::RootLayerGroup == nullptr) {

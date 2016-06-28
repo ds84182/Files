@@ -2,9 +2,9 @@
 
 #include <memory>
 
-#include "graphics/fonts.h"
+#include <graphics/fonts.hpp>
 
-#include "ui/element.h"
+#include <ui/element.hpp>
 
 namespace UI {
 namespace Elements {

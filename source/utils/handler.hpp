@@ -5,7 +5,7 @@
 #include <functional>
 #include <memory>
 
-#include "utils/thread.h"
+#include <utils/thread.hpp>
 
 class Message;
 

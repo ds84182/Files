@@ -2,13 +2,13 @@
 
 #include <3ds.h>
 
-#include "graphics/fonts.h"
-#include "graphics/ripple.h"
+#include <graphics/fonts.hpp>
+#include <graphics/ripple.hpp>
 
-#include "ui/element.h"
+#include <ui/element.hpp>
 
-#include "utils/filesystem/directory.h"
-#include "utils/filesystem/path.h"
+#include <utils/filesystem/directory.hpp>
+#include <utils/filesystem/path.hpp>
 
 namespace UI {
 namespace Elements {

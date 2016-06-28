@@ -4,7 +4,7 @@
 #include <memory>
 #include <utility>
 
-#include "activity.h"
+#include "activity.hpp"
 
 namespace ActivityManager {
 

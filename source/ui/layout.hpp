@@ -3,8 +3,8 @@
 #include <functional>
 #include <memory>
 
-#include "ui/layer.h"
-#include "utils/bounds.h"
+#include <ui/layer.hpp>
+#include <utils/bounds.hpp>
 
 namespace UI {
 

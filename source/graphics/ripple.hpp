@@ -1,10 +1,10 @@
 #pragma once
 
-#include "animation/controller.h"
+#include <animation/controller.hpp>
 
-#include "utils/bounds.h"
+#include <utils/bounds.hpp>
 
-#include "circle.h"
+#include "circle.hpp"
 
 namespace GFX {
 

@@ -6,8 +6,8 @@
 #include <tuple>
 #include <vector>
 
-#include "target.h"
-#include "time_interpolator.h"
+#include "target.hpp"
+#include "time_interpolator.hpp"
 
 namespace Animation {
 

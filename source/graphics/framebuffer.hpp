@@ -3,8 +3,8 @@
 #include <3ds.h>
 #include <citro3d.h>
 
-#include "core.h"
-#include "texture.h"
+#include "core.hpp"
+#include "texture.hpp"
 
 namespace GFX {
 
