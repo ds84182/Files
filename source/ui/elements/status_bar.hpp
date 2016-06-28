@@ -11,7 +11,8 @@ namespace UI {
 namespace Elements {
 
 struct StatusBarData {
-    std::u32string systemTime = U"12:00";
+    u64 systemTimeMin;
+    std::u32string systemTime;
 };
 
 class StatusBar : public Element<std::nullptr_t> {

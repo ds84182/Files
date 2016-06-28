@@ -31,10 +31,28 @@ void UI::Elements::StatusBar::render(float timeDelta) {
     GFX::Rectangle rect(bounds.left, bounds.top, bounds.width(), bounds.height(), Style::colorPrimaryDark);
     rect.render();
 
+    u64 currentTime = osGetTime() / 1000 / 60;
+    if (Data.systemTime.empty() || currentTime != Data.systemTimeMin) {
+        Data.systemTimeMin = currentTime;
+        // Convert currentTime into number of minutes in the current day
+        currentTime %= 60*24;
+        // Seperate into components
+        u8 minutes = (currentTime % 60);
+        u8 hours = currentTime / 60;
+        // Modify for 12 hour clock
+        if (hours == 0) {
+            hours = 12;
+        } else if (hours >= 13) {
+            hours -= 12;
+        }
+        sprintf(memUsageBuffer, "%02d:%02d", hours, minutes);
+        convertToU32(memUsageBuffer, Data.systemTime);
+    }
+
     auto &font = GFX::Fonts::CaptionMedium;
+
     int textWidth = font.width(Data.systemTime);
     int textHeight = font.height();
-    // TODO: GFX::Color::Black
     font.drawText(Data.systemTime, bounds.right-textWidth-8, 12-textHeight/2, GFX::Color(255,255,255));
 
     struct mallinfo mi = mallinfo();
