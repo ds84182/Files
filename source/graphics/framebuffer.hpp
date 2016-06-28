@@ -28,6 +28,7 @@ public:
 		this->width = width;
 		this->height = height;
 		renderTarget = C3D_RenderTargetCreate(width, height, colorFormat, depthFormat);
+		if (!renderTarget) abort();
 	}
 
 	void destroy() {
