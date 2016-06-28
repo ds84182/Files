@@ -57,7 +57,7 @@ Glyph::Glyph(FT_Face face, char32_t c, float baseline) {
     GX_TRANSFER_IN_FORMAT(GX_TRANSFER_FMT_RGBA8) | GX_TRANSFER_OUT_FORMAT(GX_TRANSFER_FMT_RGBA8) | \
     GX_TRANSFER_SCALING(GX_TRANSFER_SCALE_NO));
 
-	GX_DisplayTransfer(
+	C3D_SafeDisplayTransfer(
         buffer,
         GX_BUFFER_DIM(width, height),
         reinterpret_cast<u32*>(texture.data),
@@ -67,7 +67,6 @@ Glyph::Glyph(FT_Face face, char32_t c, float baseline) {
 	gspWaitForPPF();
 
 	linearFree(buffer);
-	GSPGPU_InvalidateDataCache(texture.data, texture.size);
 }
 
 Glyph::~Glyph() {
