@@ -15,6 +15,15 @@ inline TimeInterpolator LogDecelerationInterpolatorFactory(float base, float tim
 	};
 }
 
+inline TimeInterpolator DecelerateInterpolatorFactory(float factor = 1.0f) {
+	return [=](float input) {
+		if (factor == 1.0f) {
+			return 1.0f - (1.0f - input) * (1.0f - input);
+		}
+		return 1.0f - std::pow((1.0f - input), 2 * factor);
+	};
+}
+
 float FastOutSlowInInterpolator(float);
 float FastOutLinearInInterpolator(float);
 float LinearOutSlowInInterpolator(float);

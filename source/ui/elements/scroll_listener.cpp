@@ -1,13 +1,38 @@
 #include "scroll_listener.hpp"
 
+#include <graphics/circle.hpp>
+#include <graphics/scissor.hpp>
+
+#define TICKS_PER_SEC (268123480)
+
 namespace UI {
 namespace Elements {
 
 void ScrollListenerElement::render(float timeDelta) {
-	if (scrollVelocity != 0) {
-		data->onScroll(scrollVelocity);
-		scrollVelocity *= 0.985f;
+	GFX::Scissor scissor(bounds);
+
+	float dist = scrollVelocity*timeDelta;
+	if (std::abs(dist) > 0.01) {
+		int recvFeedback = data->onScroll(dist);
+		if (recvFeedback != 0) {
+			/*if (std::abs(scrollFeedback) < std::abs(recvFeedback)) {
+				scrollFeedback = recvFeedback;
+			}*/
+			if (scrollVelocity > 0) {
+				eeTop.onAbsorb(-scrollVelocity);
+			} else {
+				eeBottom.onAbsorb(scrollVelocity);
+			}
+			scrollVelocity = 0;
+		}
+		scrollVelocity *= 0.785f;
 	}
+
+	eeTop.setSize(bounds.width(), bounds.height());
+	eeTop.draw();
+
+	eeBottom.setSize(bounds.width(), bounds.height());
+	eeBottom.draw(-bounds.width(), bounds.height(), 3.14, -bounds.width(), 0);
 }
 
 void ScrollListenerElement::hookCallbacks() {
@@ -15,7 +40,9 @@ void ScrollListenerElement::hookCallbacks() {
 		touchX = x;
 		touchY = y;
 		hasMoved = false;
-		lastVelocity = 0;
+		lastTick = 0;
+		lastDiff = 0;
+		lastFeedback = 0;
 		data->forwardTouchStart(x, y);
 		return true; // We used the event to do something, return true
 	};
@@ -42,12 +69,38 @@ void ScrollListenerElement::hookCallbacks() {
 
 void ScrollListenerElement::handleMove(int x, int y, bool up) {
 	// TODO: Horizontal
-	int diff = y-touchY;
-	data->onScroll(diff);
-	if (up) {
-		scrollVelocity = lastVelocity;
+	u64 timeTick = svcGetSystemTick();
+
+	if (!up) {
+		int diff = y-touchY;
+		int recvFeedback = data->onScroll(diff);
+		if (recvFeedback != 0) {
+			if (diff > 0) {
+				eeTop.onPull(((float)diff)/((float)bounds.height()), ((float)x)/((float)bounds.width()));
+				if (!eeBottom.isFinished()) {
+					eeBottom.onRelease();
+				}
+			} else if (diff < 0) {
+				eeBottom.onPull(-((float)diff)/((float)bounds.height()), 1.0f-((float)x)/((float)bounds.width()));
+				if (!eeTop.isFinished()) {
+					eeTop.onRelease();
+				}
+			}
+		}
+		lastFeedback = recvFeedback;
+		lastDiff = diff;
+		lastTick = timeTick;
+	} else {
+		eeTop.onRelease();
+		eeBottom.onRelease();
+		if (lastFeedback == 0) {
+			float timeDiff = ((float)(timeTick-lastTick))/TICKS_PER_SEC;
+			scrollVelocity = lastDiff/timeDiff;
+		} else {
+			scrollVelocity = 0;
+		}
 	}
-	lastVelocity = diff;
+
 	touchX = x;
 	touchY = y;
 }

@@ -26,6 +26,7 @@ class RecyclerLayout : public Layout, public ScrollListener {
 	std::shared_ptr<ScrollListenerElement> scrollListener;
 	std::weak_ptr<ElementBase> focused;
 	int top = 0; // the data index of the element at the top of the queue
+	int scrollFeedbackAmount;
 
 public:
 	std::vector<Data> data;
@@ -46,12 +47,13 @@ public:
 		elementLayer.clear();
 	}
 
-	virtual void onScroll(int amount) override {
+	virtual int onScroll(int amount) override {
 		for (auto &element : queue) {
 			element->bounds.move(0, amount);
 		}
 
 		update();
+		return scrollFeedbackAmount;
 	}
 
 	virtual void forwardTouchStart(int x, int y) override {
@@ -129,6 +131,7 @@ public:
 		elementLayer.bounds = bounds;
 		scrollLayer.bounds = bounds;
 		scrollListener->bounds = bounds;
+		scrollFeedbackAmount = 0;
 
 		// Remove outside elements at the bottom
 		while (!queue.empty()) {
@@ -150,7 +153,7 @@ public:
 				queue.pop_front();
 				top++;
 			} else {
-				// We expect every element above this to be inside
+				// We expect every element below this to be inside
 				break;
 			}
 		}
@@ -163,11 +166,12 @@ public:
 
 		if (top == 0 && fillBounds.top > bounds.top) {
 			// move all elements up
-			int diff = fillBounds.top-bounds.top;
+			int diff = bounds.top-fillBounds.top;
 			for (std::shared_ptr<Element> &element : queue) {
-				element->bounds.move(0, -diff);
+				element->bounds.move(0, diff);
 			}
-			fillBounds.move(0, -diff);
+			fillBounds.move(0, diff);
+			scrollFeedbackAmount = -diff;
 		} else if ((top+queue.size()) >= data.size() && fillBounds.bottom < bounds.bottom) {
 			// if the top is good but the bottom is not, fix the bottom
 			int diff = bounds.bottom-fillBounds.bottom;
@@ -175,6 +179,7 @@ public:
 				element->bounds.move(0, diff);
 			}
 			fillBounds.move(0, diff);
+			scrollFeedbackAmount = -diff;
 		}
 
 		// While fillBounds.bottom is smaller than bounds.bottom and there is data left
@@ -218,11 +223,12 @@ public:
 		// If it couldn't add enough to fill the screen...
 		if (fillBounds.top > bounds.top) {
 			// move all elements up
-			int diff = fillBounds.top-bounds.top;
+			int diff = bounds.top-fillBounds.top;
 			for (std::shared_ptr<Element> &element : queue) {
-				element->bounds.move(0, -diff);
+				element->bounds.move(0, diff);
 			}
-			fillBounds.move(0, -diff);
+			fillBounds.move(0, diff);
+			scrollFeedbackAmount = -diff;
 		} else if (fillBounds.height() > bounds.height() && fillBounds.bottom < bounds.bottom) {
 			// if the list can scroll and the bottom is higher than the layout bottom
 			int diff = bounds.bottom-fillBounds.bottom;
@@ -230,6 +236,7 @@ public:
 				element->bounds.move(0, diff);
 			}
 			fillBounds.move(0, diff);
+			scrollFeedbackAmount = -diff;
 		}
 	}
 
