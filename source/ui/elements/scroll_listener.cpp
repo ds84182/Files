@@ -28,11 +28,15 @@ void ScrollListenerElement::render(float timeDelta) {
 		scrollVelocity *= 0.895f;
 	}
 
-	eeTop.setSize(bounds.width(), bounds.height());
-	eeTop.draw();
+	if (!eeTop.isFinished()) {
+		eeTop.setSize(bounds.width(), bounds.height());
+		eeTop.draw();
+	}
 
-	eeBottom.setSize(bounds.width(), bounds.height());
-	eeBottom.draw(-bounds.width(), bounds.height(), 3.14, -bounds.width(), 0);
+	if (!eeBottom.isFinished()) {
+		eeBottom.setSize(bounds.width(), bounds.height());
+		eeBottom.draw(-bounds.width(), bounds.height(), 3.14, -bounds.width(), 0);
+	}
 }
 
 void ScrollListenerElement::hookCallbacks() {
