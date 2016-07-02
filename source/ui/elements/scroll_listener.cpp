@@ -25,7 +25,7 @@ void ScrollListenerElement::render(float timeDelta) {
 			}
 			scrollVelocity = 0;
 		}
-		scrollVelocity *= 0.785f;
+		scrollVelocity *= 0.895f;
 	}
 
 	eeTop.setSize(bounds.width(), bounds.height());
