@@ -57,3 +57,4 @@ private:
 
 // Class forward refs
 class FileBrowserActivity;
+class ImageViewActivity;
