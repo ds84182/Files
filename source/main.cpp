@@ -45,6 +45,7 @@ int main() {
 			break; // break in order to return to hbmenu
 
 		UI::Manager::Update(timeDelta);
+		UI::StatusBarManager::Update(timeDelta);
 
 		GFX::FrameBegin();
 
