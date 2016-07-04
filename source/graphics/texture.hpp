@@ -44,6 +44,24 @@ public:
 		height = p2Height = tex->height;
 	}
 
+	Texture(const Texture &other) {
+		owns = false;
+		tex = other.tex;
+		width = other.width;
+		height = other.height;
+		p2Width = other.p2Width;
+		p2Height = other.p2Height;
+	}
+
+	Texture(Texture &other) {
+		owns = other.owns;
+		tex = other.tex;
+		width = other.width;
+		height = other.height;
+		p2Width = other.p2Width;
+		p2Height = other.p2Height;
+	}
+
 	~Texture() {
 		destroy();
 	}
@@ -85,16 +103,8 @@ public:
 	}
 
 	void copyFrom(Texture *other) {
-		//u32 flags = 4;
-
 		GSPGPU_FlushDataCache(other->tex->data, other->tex->size);
 
-		/*GX_TextureCopy(reinterpret_cast<u32*>(other->tex->data),
-			other->p2Width | (other->p2Width << 16),
-			reinterpret_cast<u32*>(tex->data),
-			p2Width | (p2Width << 16),
-			512 * 4,
-			flags);*/
 		GX_DisplayTransfer(
 			reinterpret_cast<u32*>(other->tex->data),
 			GX_BUFFER_DIM(other->p2Width, other->p2Height),
@@ -104,6 +114,8 @@ public:
 		);
 		gspWaitForPPF();
 	}
+
+	void copyAndTile(u32 *data, u32 width, u32 height);
 };
 
 }
