@@ -3,7 +3,6 @@
 
 #include <animation/controller.hpp>
 
-#include <ui/elements/status_bar.hpp>
 #include <ui/elements/directory_entry.hpp>
 #include <ui/layouts/recycler_layout.hpp>
 
@@ -45,6 +44,8 @@ void FileBrowserActivity::init() {
 			printf("Enter directory\n");
 
 			ActivityManager::Start<FileBrowserActivity>(data.path);
+		} else if (data.type == FS::EntryType::File) {
+			ActivityManager::Start<ImageViewActivity>(data.path);
 		}
 	};
 
