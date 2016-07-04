@@ -38,8 +38,12 @@ union Color {
 		return Color(r-other.r, g-other.g, b-other.b, a-other.a);
 	}
 
-	Color operator*(const float &other) const {
-		return Color(r*other, g*other, b*other, a*other);
+	Color lerp(const Color &other, float t) const {
+		s32 r = ((other.r-this->r)*t)+this->r;
+		s32 g = ((other.g-this->g)*t)+this->g;
+		s32 b = ((other.b-this->b)*t)+this->b;
+		s32 a = ((other.a-this->a)*t)+this->a;
+		return GFX::Color(r, g, b, a);
 	}
 };
 
