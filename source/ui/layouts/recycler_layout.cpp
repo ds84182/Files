@@ -5,7 +5,7 @@ namespace Layouts {
 
     RecyclerLayout::RecyclerLayout(Adapter *adapter) : adapter(adapter) {
         adapter->layout = this;
-        scrollListener = std::make_shared<ScrollListenerElement>(this);
+        scrollListener = new ScrollListenerElement(this);
         scrollLayer.add(scrollListener);
     }
 
@@ -26,28 +26,28 @@ namespace Layouts {
     void RecyclerLayout::forwardTouchStart(int x, int y) {
         focused = elementLayer.findAt(x, y);
 
-        auto element = focused.lock();
+        auto element = focused;
         if (element && element->onTouchStart) {
             element->onTouchStart(x, y);
         }
     }
 
     void RecyclerLayout::forwardTouchMove(int x, int y) {
-        auto element = focused.lock();
+        auto element = focused;
         if (element && element->onTouchMove) {
             element->onTouchMove(x, y);
         }
     }
 
     void RecyclerLayout::forwardTouchEnd(int x, int y) {
-        auto element = focused.lock();
+        auto element = focused;
         if (element && element->onTouchEnd) {
             element->onTouchEnd(x, y);
         }
     }
 
     void RecyclerLayout::forwardTap(int x, int y) {
-        if (auto element = focused.lock()) {
+        if (auto element = focused) {
             if (element->onTap) {
                 element->onTap(x, y);
             }
@@ -68,6 +68,7 @@ namespace Layouts {
         queue.clear();
         elementLayer.clear();
         top = 0;
+        focused = nullptr;
     }
 
     /*
@@ -104,7 +105,7 @@ namespace Layouts {
 
         // Remove outside elements at the bottom
         while (!queue.empty()) {
-            std::shared_ptr<ElementBase> &element = queue.back();
+            ElementBase *element = queue.back();
             if (!element->bounds.contains(bounds)) {
                 elementLayer.remove(element);
                 queue.pop_back();
@@ -116,7 +117,7 @@ namespace Layouts {
 
         // Remove outside elements at the top
         while (!queue.empty()) {
-            std::shared_ptr<ElementBase> &element = queue.front();
+            ElementBase *element = queue.front();
             if (!element->bounds.contains(bounds)) {
                 elementLayer.remove(element);
                 queue.pop_front();
@@ -129,14 +130,14 @@ namespace Layouts {
 
         // Attempt to fit new elements into the view
         Bounds fillBounds(LRTB, std::numeric_limits<int>::max(), std::numeric_limits<int>::min(), std::numeric_limits<int>::max(), std::numeric_limits<int>::min());
-        for (std::shared_ptr<ElementBase> &element : queue) {
+        for (ElementBase *element : queue) {
             fillBounds.extend(element->bounds);
         }
 
         if (top == 0 && fillBounds.top > bounds.top) {
             // move all elements up
             int diff = bounds.top-fillBounds.top;
-            for (std::shared_ptr<ElementBase> &element : queue) {
+            for (ElementBase *element : queue) {
                 element->bounds.move(0, diff);
             }
             fillBounds.move(0, diff);
@@ -144,7 +145,7 @@ namespace Layouts {
         } else if ((top+queue.size()) >= adapter->count() && fillBounds.bottom < bounds.bottom) {
             // if the top is good but the bottom is not, fix the bottom
             int diff = bounds.bottom-fillBounds.bottom;
-            for (std::shared_ptr<ElementBase> &element : queue) {
+            for (ElementBase *element : queue) {
                 element->bounds.move(0, diff);
             }
             fillBounds.move(0, diff);
@@ -159,7 +160,7 @@ namespace Layouts {
             Bounds elementBounds(LRTB, bounds.left, bounds.right, currentBottom.bottom, currentBottom.bottom+elementSize);
 
             // Construct the element and add it to the back
-            std::shared_ptr<ElementBase> element = adapter->createElement();
+            ElementBase *element = adapter->createElement();
             adapter->bindElement(element, index);
             element->bounds = elementBounds;
             elementLayer.add(element);
@@ -178,7 +179,7 @@ namespace Layouts {
             Bounds elementBounds(LRTB, bounds.left, bounds.right, currentTop.top-elementSize, currentTop.top);
 
             // Construct the element and add it to the back
-            std::shared_ptr<ElementBase> element = adapter->createElement();
+            ElementBase *element = adapter->createElement();
             adapter->bindElement(element, index);
             element->bounds = elementBounds;
             elementLayer.add(element);
@@ -193,7 +194,7 @@ namespace Layouts {
         if (fillBounds.top > bounds.top) {
             // move all elements up
             int diff = bounds.top-fillBounds.top;
-            for (std::shared_ptr<ElementBase> &element : queue) {
+            for (ElementBase *element : queue) {
                 element->bounds.move(0, diff);
             }
             fillBounds.move(0, diff);
@@ -201,7 +202,7 @@ namespace Layouts {
         } else if (fillBounds.height() > bounds.height() && fillBounds.bottom < bounds.bottom) {
             // if the list can scroll and the bottom is higher than the layout bottom
             int diff = bounds.bottom-fillBounds.bottom;
-            for (std::shared_ptr<ElementBase> &element : queue) {
+            for (ElementBase *element : queue) {
                 element->bounds.move(0, diff);
             }
             fillBounds.move(0, diff);

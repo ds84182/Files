@@ -23,12 +23,12 @@ public:
 	virtual void onFinish() override;
 	virtual void onKeyReleased(u32 keys) override;
 
-	virtual std::shared_ptr<UI::ElementBase> createElement() override {
-		return std::make_shared<DirectoryEntryElement>();
+	virtual UI::ElementBase *createElement() override {
+		return new DirectoryEntryElement();
 	}
 
-	virtual void bindElement(std::shared_ptr<UI::ElementBase> element, unsigned int position) override {
-		DirectoryEntryElement *delem = reinterpret_cast<DirectoryEntryElement*>(element.get());
+	virtual void bindElement(UI::ElementBase *element, unsigned int position) override {
+		DirectoryEntryElement *delem = reinterpret_cast<DirectoryEntryElement*>(element);
 		delem->setData(data.at(position));
 	}
 

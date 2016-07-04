@@ -15,15 +15,21 @@ namespace Manager {
 
 UI::LayerGroup *RootLayerGroup = nullptr;
 
-static std::weak_ptr<UI::ElementBase> weakFocused;
+static UI::ElementBase *focused;
 static touchPosition startTouch;
 static touchPosition lastTouch;
 static bool tapValid;
 
+ElementBase *GetFocusedElement() {
+	return focused;
+}
+
+void ClearFocusedElement() {
+	focused = nullptr;
+}
+
 void Update(float delta) {
 	ActivityManager::current->dispatchUpdate(delta);
-
-	auto focused = weakFocused.lock();
 
 	u32 kDown = hidKeysDown();
 	u32 kHeld = hidKeysHeld();
@@ -36,7 +42,7 @@ void Update(float delta) {
 	hidTouchRead(&touch);
 
 	if ((!focused) && (kDown & KEY_TOUCH)) {
-		focused.reset();
+		focused = nullptr;
 
 		// Find an element to focus
 
@@ -47,7 +53,7 @@ void Update(float delta) {
 		}
 
 		while (group) {
-			focused = group->find([&](auto &element) {
+			focused = group->find([&](auto element) {
 				return element->bounds.contains(touch.px, touch.py) &&
 					element->onTouchStart && element->onTouchStart(touch.px, touch.py);
 			});
@@ -58,7 +64,6 @@ void Update(float delta) {
 
 		if (focused) {
 			printf("Focused on element %p\n", focused);
-			weakFocused = focused;
 			startTouch = touch;
 			lastTouch = touch;
 			tapValid = true;
@@ -73,7 +78,7 @@ void Update(float delta) {
 				focused->onTouchEnd(lastTouch.px, lastTouch.py);
 			}
 
-			weakFocused.reset();
+			focused = nullptr;
 		} else {
 			if (tapValid) {
 				s32 touchDiffX = ((s32)startTouch.px)-((s32)lastTouch.px);

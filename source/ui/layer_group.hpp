@@ -27,8 +27,8 @@ public:
     void compost(float delta);
     void render(float delta);
 
-    std::shared_ptr<ElementBase> find(std::function<bool(std::shared_ptr<ElementBase>&)> func) {
-        if (disabled) return std::shared_ptr<ElementBase>();
+    ElementBase *find(std::function<bool(ElementBase*)> func) {
+        if (disabled) return nullptr;
 
 		auto layerit = layers.rbegin();
 		auto layeritend = layers.rend();
@@ -37,11 +37,12 @@ public:
 			auto element = layer->find(func);
 			if (element) return element;
 		}
-		return std::shared_ptr<ElementBase>();
+
+		return nullptr;
 	}
 
-	std::shared_ptr<ElementBase> findAt(int x, int y) {
-		return find([&](auto &element) {
+	ElementBase *findAt(int x, int y) {
+		return find([&](auto element) {
 			return element->bounds.contains(x, y);
 		});
 	}

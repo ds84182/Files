@@ -14,7 +14,7 @@ public:
 	std::function<bool(int,int)> onTouchMove;
 	std::function<bool(int,int)> onTouchEnd;
 
-	virtual ~ElementBase() = default;
+	virtual ~ElementBase();
 	virtual void render(float timeDelta) = 0;
 };
 

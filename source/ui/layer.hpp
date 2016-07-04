@@ -4,7 +4,6 @@
 
 #include <algorithm>
 #include <initializer_list>
-#include <memory>
 #include <vector>
 
 #include <graphics/core.hpp>
@@ -54,8 +53,14 @@ public:
 		LightLock_Init(&lck);
 	}
 
-	Layer(std::initializer_list<std::shared_ptr<ElementBase>> list) : elements(list) {
+	Layer(std::initializer_list<ElementBase*> list) : elements(list) {
 		LightLock_Init(&lck);
+	}
+
+	~Layer() {
+		for (auto element : elements) {
+			delete element;
+		}
 	}
 
 	void lock() {
@@ -66,20 +71,24 @@ public:
 		LightLock_Unlock(&lck);
 	}
 
-	void add(const std::shared_ptr<ElementBase> &element) {
+	void add(ElementBase *element) {
 		lock();
 		elements.push_back(element);
 		unlock();
 	}
 
-	void remove(const std::shared_ptr<ElementBase> &element) {
+	void remove(ElementBase *element) {
 		lock();
 		elements.erase(std::remove(elements.begin(), elements.end(), element), elements.end());
+		delete element;
 		unlock();
 	}
 
 	void clear() {
 		lock();
+		for (auto element : elements) {
+			delete element;
+		}
 		elements.clear();
 		unlock();
 	}
@@ -140,20 +149,20 @@ public:
 		compostFB.setClear(C3D_CLEAR_ALL, GFX::Color(0, 0, 0, 0));
 	}
 
-	std::shared_ptr<ElementBase> find(std::function<bool(std::shared_ptr<ElementBase>&)> func) {
+	ElementBase *find(std::function<bool(ElementBase*)> func) {
 		lock();
 		auto it = std::find_if(elements.rbegin(), elements.rend(), func);
 		unlock();
 
 		if (it == elements.rend()) {
-			return std::shared_ptr<ElementBase>();
+			return nullptr;
 		} else {
 			return *it;
 		}
 	}
 
-	std::shared_ptr<ElementBase> findAt(int x, int y) {
-		return find([&](auto &element) {
+	ElementBase *findAt(int x, int y) {
+		return find([&](auto element) {
 			return element->bounds.contains(x, y);
 		});
 	}
@@ -161,7 +170,7 @@ private:
 	LightLock lck;
 
 	// TODO: Make this private
-	std::vector<std::shared_ptr<ElementBase>> elements; // Do not access this directly without locking
+	std::vector<ElementBase*> elements; // Do not access this directly without locking
 	// TODO: Layer should have event listeners (so the RecyclerLayout can remove the scroll listener element)
 	// This would require a base class for every object that listens to element events
 

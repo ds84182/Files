@@ -3,7 +3,6 @@
 #include <deque>
 #include <functional>
 #include <limits>
-#include <memory>
 #include <vector>
 
 #include <ui/layer.hpp>
@@ -20,9 +19,9 @@ using UI::Elements::ScrollListenerElement;
 using UI::Elements::ScrollListener;
 
 class RecyclerLayout : public Layout, public ScrollListener {
-	std::deque<std::shared_ptr<ElementBase>> queue;
-	std::shared_ptr<ScrollListenerElement> scrollListener;
-	std::weak_ptr<ElementBase> focused;
+	std::deque<ElementBase*> queue;
+	ScrollListenerElement *scrollListener;
+	ElementBase *focused;
 	int top = 0; // the data index of the element at the top of the queue
 	int scrollFeedbackAmount;
 
@@ -34,8 +33,8 @@ public:
 		Adapter() {}
 		virtual ~Adapter() = default;
 
-		virtual std::shared_ptr<ElementBase> createElement() = 0;
-		virtual void bindElement(std::shared_ptr<ElementBase> element, unsigned int position) = 0;
+		virtual ElementBase *createElement() = 0;
+		virtual void bindElement(ElementBase *element, unsigned int position) = 0;
 		virtual unsigned int count() = 0;
 
 		void notifyChanged() {
@@ -46,7 +45,7 @@ public:
 
 	Adapter *adapter;
 	// Gets the size of an element
-	//std::function<int(const Data&, int)> getElementSize;
+	//std::function<int(int)> getElementSize;
 	int elementSize; // < This is used if getElementSize is null
 	std::function<void(int)> onSelected;
 	Layer elementLayer;

@@ -16,7 +16,7 @@ namespace StatusBarManager {
 
 static UI::Layer topLayer;
 static UI::LayerGroup rootLayerGroup;
-static std::shared_ptr<UI::Elements::StatusBar> statusBar;
+static UI::Elements::StatusBar *statusBar;
 static Animation::Controller anims;
 static bool isBlack = false;
 
@@ -25,7 +25,7 @@ void Init() {
     topLayer.bounds = Bounds(400, 240); // TODO: Some screen size constants
     topLayer.hasBackground = true;
     topLayer.backgroundColor = Style::colorPrimary;
-    topLayer.add(statusBar = std::make_shared<UI::Elements::StatusBar>()); // TODO: Remove shared_ptr bullshit
+    topLayer.add(statusBar = new UI::Elements::StatusBar());
     rootLayerGroup.add(&topLayer);
 }
 

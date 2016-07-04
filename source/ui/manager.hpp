@@ -3,10 +3,14 @@
 namespace UI {
 
 class LayerGroup;
+class ElementBase;
 
 namespace Manager {
 
 extern LayerGroup *RootLayerGroup;
+
+ElementBase *GetFocusedElement();
+void ClearFocusedElement();
 
 void Update(float delta);
 
