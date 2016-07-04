@@ -16,21 +16,24 @@ public:
 		scissorBox = current;
 		scissorBox.clip(previous);
 
-		//C3D_SetScissor(GPU_SCISSOR_NORMAL, scissorBox.top, scissorBox.right, scissorBox.bottom, scissorBox.left);
 		updateScissor();
-		//C3D_SetScissor(GPU_SCISSOR_NORMAL, scissorBox.bottom, scissorBox.right, scissorBox.top, scissorBox.left);
 	}
 
 	~Scissor() {
+		exit();
+	}
+
+	void exit() {
+		if (invalid) return;
 		scissorBox = previous;
-		//C3D_SetScissor(GPU_SCISSOR_NORMAL, scissorBox.top, scissorBox.right, scissorBox.bottom, scissorBox.left);
 		updateScissor();
-		//C3D_SetScissor(GPU_SCISSOR_NORMAL, scissorBox.bottom, scissorBox.right, scissorBox.top, scissorBox.left);
+		invalid = true;
 	}
 
 private:
 	Bounds previous;
 	Bounds current;
+	bool invalid = false;
 
 	static void updateScissor();
 };
