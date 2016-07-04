@@ -5,6 +5,8 @@
 #include <graphics/core.hpp>
 #include <graphics/fonts.hpp>
 
+#include <style/color.hpp>
+
 #include <ui/element.hpp>
 
 namespace UI {
@@ -12,7 +14,9 @@ namespace Elements {
 
 struct StatusBarData {
     u64 systemTimeMin;
-    std::u32string systemTime;
+    std::wstring systemTime;
+    std::wstring debugText;
+    GFX::Color primaryDark = Style::colorPrimaryDark;
 };
 
 class StatusBar : public Element<std::nullptr_t> {
