@@ -46,7 +46,7 @@ void Rectangle::render(Texture *texture, int textureWidth, int textureHeight,
 		}
 
 		if (textureHeight == 0) {
-			textureWidth = texture->height;
+			textureHeight = texture->height;
 		}
 
 		C3D_FVUnifSet(GPU_VERTEX_SHADER, textureScaleUniform,
