@@ -1,6 +1,7 @@
 #include "activity.hpp"
 #include "manager.hpp"
 
+#include <graphics/fonts.hpp>
 #include <graphics/texture.hpp>
 
 #include <fmt/format.hpp>
@@ -13,10 +14,49 @@
 
 #include <style/color.hpp>
 
+class ImageViewElement : public UI::ElementBase {
+public:
+    std::wstring error;
+    GFX::Texture texture;
+    float zoom = 1, panX = 0, panY = 0;
+
+    void setTexture(const GFX::Texture &tex) {
+        if (tex.width > tex.height) {
+            zoom = 320.f/tex.width;
+            panX = 0;
+            panY = 120.f-((tex.height*zoom)/2.f);
+        } else {
+            zoom = 240.f/tex.height;
+            panX = 160.f-((tex.width*zoom)/2.f);
+            panY = 0;
+        }
+        if (zoom > 1.f) {
+            zoom = 1.f;
+            panX = 160.f-(tex.width/2.f);
+            panY = 120.f-(tex.height/2.f);
+        }
+        texture = tex;
+    }
+
+    virtual void render(float timeDelta) override {
+        if (texture.tex) {
+            GFX::Rectangle rect(panX, panY, texture.width*zoom, texture.height*zoom, GFX::Color(255,255,255));
+            rect.render(&texture);
+        } else {
+            auto &font = GFX::Fonts::Body1;
+
+            int textWidth = font.width(error);
+            int textHeight = font.height();
+            font.drawText(error, 160-(textWidth/2), 120-(textHeight/2), GFX::Color(255,255,255));
+        }
+    }
+};
+
 class ImageViewActivity : public Activity {
 public:
     FS::Path path;
     GFX::Texture texture;
+    ImageViewElement *elem = new ImageViewElement();
     UI::Layer imageLayer;
     ImageViewActivity(const FS::Path &path) : path(path) {}
 
@@ -27,22 +67,23 @@ public:
         //decode
         unsigned error = lodepng_decode32_file(&image, &width, &height, path.str().c_str());
 
-        texture.create(width, height, GPU_RGBA8);
-        texture.copyAndTile(reinterpret_cast<u32*>(image), width, height);
-        free(image);
+        if (!error) {
+            texture.create(width, height, GPU_RGBA8);
+            texture.copyAndTile(reinterpret_cast<u32*>(image), width, height);
+            free(image);
+            elem->setTexture(texture);
+        }
 
         fmt::WMemoryWriter debugWriter;
-        debugWriter << L"File: " << path.str() << L'\n';
-        debugWriter << L"Image size: " << width << L'x' << height << L'\n';
         if (error) debugWriter << L"Error " << error << L": " << lodepng_error_text(error);
-        UI::StatusBarManager::SetDebugText(debugWriter.str());
+        UI::StatusBarManager::SetDebugText(elem->error = debugWriter.str());
 
         UI::StatusBarManager::SetBlack(true);
 
-        imageLayer.bounds = Bounds(320, 240);
+        elem->bounds = imageLayer.bounds = Bounds(320, 240);
         imageLayer.hasBackground = true;
-        imageLayer.backgroundColor = GFX::Color(255,255,255);
-        imageLayer.backgroundTexture = &texture;
+        imageLayer.backgroundColor = GFX::Color(0,0,0);
+        imageLayer.add(elem);
         addLayer(&imageLayer);
     }
 };
