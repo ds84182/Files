@@ -1,8 +1,7 @@
 #pragma once
 
 // C++ STL
-//#include <codecvt>
-//#include <locale>
+#include <functional>
 #include <map>
 #include <string>
 
@@ -54,12 +53,16 @@ public:
     const Glyph &getGlyph(char32_t c);
 
     void drawText(const std::wstring &str, int x, int y, const GFX::Color &color);
+    void drawTextWrap(const std::wstring &str, int x, int y, unsigned int width, const GFX::Color &color);
     int width(const std::wstring &str);
-    int height() {return calcHeight;}
+    unsigned int height() {return calcHeight;}
+    unsigned int height(const std::wstring &str, unsigned int wrap = 0);
 private:
     std::map<char32_t, Glyph> glyphs;
-    int calcHeight;
+    unsigned int calcHeight;
     float baseline;
+
+    void wrap(const std::wstring &str, unsigned int width, std::function<void(unsigned int, unsigned int)> callback);
 };
 
 }

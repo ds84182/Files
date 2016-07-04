@@ -182,12 +182,96 @@ void Font::drawText(const std::wstring &str, int x, int y, const GFX::Color &col
 }
 
 int Font::width(const std::wstring &str) {
+    int maxWidth = 0;
     int width = 0;
     for (unsigned int i=0; i<str.length(); i++) {
+        if (str[i] == L'\n') {
+            maxWidth = std::max(maxWidth, width);
+            width = 0;
+            continue;
+        }
+
         auto &glyph = getGlyph(str[i]);
         width += glyph.advanceX;
     }
-    return width;
+    return std::max(maxWidth, width);
+}
+
+// The callback is (start, end) of a line
+void Font::wrap(const std::wstring &str, unsigned int width, std::function<void(unsigned int, unsigned int)> callback) {
+    unsigned int base = 0;
+    while (base < str.length()) {
+        // Find next newline or break
+        unsigned int nextWhitespace = base;
+        unsigned int currentWidth = 0;
+        while (currentWidth < width && nextWhitespace < str.length() && str[nextWhitespace] != L'\n') {
+            if (str[nextWhitespace] != L' ') {
+                // Test for break
+                unsigned int testWidth = currentWidth;
+                unsigned int testBreak = nextWhitespace+1;
+                while (testWidth < width && testBreak < str.length() && str[testBreak] != L' ' && str[testBreak] != L'\n') {
+                    testWidth += getGlyph(str[testBreak]).advanceX;
+                    testBreak++;
+                }
+
+                if (testWidth > width) {
+                    // LINE BREAK NOW!
+                    break;
+                }
+            }
+
+            currentWidth += getGlyph(str[nextWhitespace]).advanceX;
+            nextWhitespace++;
+        }
+
+        if (nextWhitespace == base) {
+            callback(base, base+1);
+            base++;
+        } else if (nextWhitespace-1 != base) {
+            callback(base, nextWhitespace);
+            base = nextWhitespace;
+        } else {
+            base++;
+        }
+    }
+}
+
+unsigned int Font::height(const std::wstring &str, unsigned int wrap) {
+    if (wrap == 0) {
+        unsigned int count = 0;
+        for (unsigned int i=0; i<str.length(); i++) {
+            if (str[i] == L'\n') {
+                count++;
+            }
+        }
+        return count*calcHeight;
+    } else {
+        int count = 0;
+        this->wrap(str, wrap, [&](unsigned int start, unsigned int end) {
+            count++;
+        });
+        return count*calcHeight;
+    }
+}
+
+void Font::drawTextWrap(const std::wstring &str, int x, int y, unsigned int width, const GFX::Color &color) {
+    C3D_FixedAttribSet(1, color.r/255.0, color.g/255.0, color.b/255.0, color.a/255.0);
+    GFX::SetFragMode(GFX::FragMode::ModulateTexture);
+
+    int baseX = x;
+
+    this->wrap(str, width, [&](unsigned int start, unsigned int end) {
+        for (unsigned int i=start; i<end; i++) {
+            auto &glyph = getGlyph(str[i]);
+
+            glyph.render(x, y);
+
+            x += glyph.advanceX;
+        }
+
+        y += baseline;
+        x = baseX;
+    });
 }
 
 }

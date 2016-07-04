@@ -45,9 +45,8 @@ public:
         } else {
             auto &font = GFX::Fonts::Body1;
 
-            int textWidth = font.width(error);
-            int textHeight = font.height();
-            font.drawText(error, 160-(textWidth/2), 120-(textHeight/2), GFX::Color(255,255,255));
+            int textHeight = font.height(error, 320-16);
+            font.drawTextWrap(error, 8, 120-(textHeight/2), 320-16, GFX::Color(255,255,255));
         }
     }
 };
