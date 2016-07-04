@@ -11,11 +11,11 @@
 using UI::Elements::DirectoryEntryData;
 using UI::Elements::DirectoryEntryElement;
 
-class FileBrowserActivity : public Activity {
+class FileBrowserActivity : public Activity, public UI::Layouts::RecyclerLayout::Adapter {
 public:
-	FileBrowserActivity() : Activity() {init();}
+	FileBrowserActivity() : Activity(), directoryList(this) {init();}
 	FileBrowserActivity(const FS::Path &path) :
-		Activity(), path(path) {init();}
+		Activity(), path(path), directoryList(this) {init();}
 
 	// Called when the Activity is requested to start
 	virtual void onStart() override;
@@ -23,11 +23,25 @@ public:
 	virtual void onFinish() override;
 	virtual void onKeyReleased(u32 keys) override;
 
+	virtual std::shared_ptr<UI::ElementBase> createElement() override {
+		return std::make_shared<DirectoryEntryElement>();
+	}
+
+	virtual void bindElement(std::shared_ptr<UI::ElementBase> element, unsigned int position) override {
+		DirectoryEntryElement *delem = reinterpret_cast<DirectoryEntryElement*>(element.get());
+		delem->setData(data.at(position));
+	}
+
+	virtual unsigned int count() override {
+		return data.size();
+	}
+
 private:
 	FS::Path path;
-	UI::Layouts::RecyclerLayout<DirectoryEntryElement> directoryList;
+	UI::Layouts::RecyclerLayout directoryList;
 	Animation::Controller transitionController;
 	bool transitionFinished = false;
+	std::vector<DirectoryEntryData> data;
 
 	void init();
 	void loadEntries();
@@ -37,7 +51,8 @@ void FileBrowserActivity::init() {
 	directoryList.bounds = Bounds(320, 240); // Use the entire screen
 	directoryList.elementSize = 48;
 
-	directoryList.onSelected = [=](const DirectoryEntryData &data, int index) {
+	directoryList.onSelected = [=](int index) {
+		const DirectoryEntryData &data = this->data.at(index);
 		printf("File selected: %s (index %d)\n", data.path.str().c_str(), index);
 
 		if (data.type == FS::EntryType::Directory) {
@@ -81,21 +96,21 @@ void FileBrowserActivity::loadEntries() {
 	FS::Directory dir(path);
 
 	// Load the entries
-	directoryList.clear();
+	data.clear();
 	while (true) {
 		FS::DirectoryEntry entry = dir.next();
 		if (entry.type == FS::EntryType::None) break;
-		directoryList.data.emplace_back(entry);
+		data.emplace_back(entry);
 	}
 
 	// Sort the entries
-	std::sort(directoryList.data.begin(), directoryList.data.end(), [](auto &a, auto &b) {
+	std::sort(data.begin(), data.end(), [](auto &a, auto &b) {
 		if (a.type == FS::EntryType::Directory && b.type != a.type) return true;
 		if (b.type == FS::EntryType::Directory && a.type != b.type) return false;
 		return strcasecmp(a.path.name().c_str(), b.path.name().c_str()) < 0;
 	});
 
-	directoryList.update(); // Update needs to be called so that the elements are put on screen.
+	notifyChanged();
 }
 
 void FileBrowserActivity::onUpdate(float delta) {

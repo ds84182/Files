@@ -9,7 +9,6 @@ namespace UI {
 class ElementBase {
 public:
 	Bounds bounds;
-	//Math::Matrix4 transform = Math::Matrix4::Identity;
 	std::function<bool(int,int)> onTap; // < Called after onTouchEnd if the distance between the start is <5px
 	std::function<bool(int,int)> onTouchStart;
 	std::function<bool(int,int)> onTouchMove;
@@ -38,7 +37,6 @@ public:
 
 	Element() {}
 	Element(const T &data) : data(data) {}
-	//Element(T data) : data(data) {}
 	virtual ~Element() = default;
 
 	void setData(T &data) {
