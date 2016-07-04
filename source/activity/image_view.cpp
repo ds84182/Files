@@ -10,7 +10,6 @@
 
 #include <utils/filesystem/path.hpp>
 #include <utils/lodepng.hpp>
-#include <utils/linear_allocator.hpp>
 
 #include <style/color.hpp>
 
