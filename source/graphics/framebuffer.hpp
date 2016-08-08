@@ -53,6 +53,11 @@ public:
 	Texture getColorTexture() {
 		return Texture::from(&renderTarget->renderBuf.colorBuf);
 	}
+
+	void useDepthBuffer(Texture &texture, int depthFmt) {
+		renderTarget->renderBuf.depthFmt = depthFmt;
+		C3D_TexInitPlacement(&renderTarget->renderBuf.depthBuf, width, height, texture.tex->fmt, texture.tex->data);
+	}
 };
 
 }

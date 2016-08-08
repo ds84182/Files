@@ -5,6 +5,7 @@
 #include "fonts.hpp"
 #include "framebuffer.hpp"
 #include "scissor.hpp"
+#include "texture.hpp"
 
 #define CLEAR_COLOR 0xFFFFFFFF
 
@@ -27,6 +28,7 @@ GFX::Screen GFX::currentScreen;
 C3D_MtxStack GFX::stack;
 GFX::FragMode GFX::currentFragMode = GFX::FragMode::Unset;
 
+GFX::Texture GFX::DepthBuffer;
 GFX::FrameBuffer GFX::TopLeft;
 GFX::FrameBuffer GFX::TopRight;
 GFX::FrameBuffer GFX::Bottom;
@@ -38,8 +40,13 @@ void GFX::Init() {
 
 	C3D_CullFace(GPU_CULL_NONE); // TODO: Allow cull mode to be changed
 
+	// Initialize the shared depth buffer texture
+	DepthBuffer.create(512, 512, GPU_RGBA8, true);
+	// We modify the "publically available" Citro3D structs to point to our shared depth buffer in vram
+
 	// Initialize the framebuffers
-	TopLeft.create(240, 400, GPU_RB_RGB8, GPU_RB_DEPTH16);
+	TopLeft.create(240, 400, GPU_RB_RGB8, -1);
+	TopLeft.useDepthBuffer(DepthBuffer, GPU_RB_DEPTH24_STENCIL8);
 	TopLeft.setClear(C3D_CLEAR_ALL, GFX::Color(255, 255, 255));
 	TopLeft.setOutput(GFX_TOP, GFX_LEFT, DISPLAY_TRANSFER_FLAGS);
 
@@ -48,7 +55,8 @@ void GFX::Init() {
 	TopRight.setClear(C3D_CLEAR_ALL, GFX::Color(255, 255, 255));
 	TopRight.setOutput(GFX_TOP, GFX_RIGHT, DISPLAY_TRANSFER_FLAGS);*/
 
-	Bottom.create(240, 320, GPU_RB_RGB8, GPU_RB_DEPTH16);
+	Bottom.create(240, 320, GPU_RB_RGB8, -1);
+	Bottom.useDepthBuffer(DepthBuffer, GPU_RB_DEPTH24_STENCIL8);
 	Bottom.setClear(C3D_CLEAR_ALL, GFX::Color(255, 255, 255));
 	Bottom.setOutput(GFX_BOTTOM, GFX_LEFT, DISPLAY_TRANSFER_FLAGS);
 

@@ -50,9 +50,11 @@ union Color {
 static_assert(sizeof(Color) == 4, "Size of color union is not 4 bytes!");
 
 class FrameBuffer;
+class Texture;
 extern FrameBuffer TopLeft;
 extern FrameBuffer TopRight;
 extern FrameBuffer Bottom;
+extern Texture DepthBuffer;
 extern Screen currentScreen;
 
 extern int textureScaleUniform;

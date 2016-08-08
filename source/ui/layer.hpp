@@ -137,7 +137,7 @@ public:
 		}
 	}
 
-	void startCompost(bool alwaysDirty = false, bool withAlpha = false, bool withStencil = false) {
+	void startCompost(bool alwaysDirty = false, bool withAlpha = false) {
 		compost = true;
 		compostDirty = true;
 		compostAlwaysDirty = alwaysDirty;
@@ -145,7 +145,8 @@ public:
 		compostFB.destroy();
 		compostFB.create(GFX::np2(bounds.width()), GFX::np2(bounds.height()),
 			withAlpha ? GPU_RB_RGBA8 : GPU_RB_RGB8,
-			withStencil ? GPU_RB_DEPTH24_STENCIL8 : GPU_RB_DEPTH16);
+			-1);
+		compostFB.useDepthBuffer(GFX::DepthBuffer, GPU_RB_DEPTH24_STENCIL8);
 		compostFB.setClear(C3D_CLEAR_ALL, GFX::Color(0, 0, 0, 0));
 	}
 
